@@ -1,0 +1,22 @@
+{
+    "brand": "viki",
+    "brand_icon": "css/viki_white.svg",
+    "title": "www.qqxz.com",
+    "favicon": "https://cdn.jsdelivr.net/gh/szqq0512/Pic/img/202201221728331.ico",
+    "footer": "",
+    "show_suffix": false,
+    "load_before_search": true,
+    "fuzzy_search": false,
+    "markdown":
+    {
+        "html": true,
+        "breaks": false,
+        "linkify": false,
+        "typographer": false,
+        "lang_prefix": "lang-",
+        "image_caption": true,
+        "plantuml_server": "https://www.plantuml.com/plantuml",
+        "plantuml_format": "svg",
+        "code_block_line_number": false
+    }
+}

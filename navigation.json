@@ -1,0 +1,38 @@
+{
+    "navigation":
+    [
+        {
+            "text": "青青小竹",
+            "target": "index.md",
+            "toc": false
+        },
+        {
+            "text": "旅游",
+            "target": "旅游/vx.json",
+            "navi": true,
+            "navi_index": "游记和摄影帖子汇集/历年网上论坛帖子.md",
+            "navi_expand_level": 0
+        },
+        {
+            "text": "阅读",
+            "target": "阅读/vx.json",
+            "navi": true,
+            "navi_index": "用户/欢迎使用.md",
+            "navi_expand_level": 0
+        },
+        {
+            "text": "摄影",
+            "target": "摄影/vx.json",
+            "navi": true,
+            "navi_index": "用户/欢迎使用.md",
+            "navi_expand_level": 0
+        },
+        {
+            "text": "VIKI",
+            "target": "viki/vx.json",
+            "navi": true,
+            "navi_index": "用户/欢迎使用.md",
+            "navi_expand_level": 0
+        }
+    ]
+}
