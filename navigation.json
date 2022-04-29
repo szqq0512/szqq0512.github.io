@@ -10,21 +10,21 @@
             "text": "旅游",
             "target": "旅游/vx.json",
             "navi": true,
-            "navi_index": "../#!viki/用户/欢迎使用.md",
+            "navi_index": "",
             "navi_expand_level": 0
         },
         {
             "text": "阅读",
             "target": "阅读/vx.json",
             "navi": true,
-            "navi_index": "../#!viki/用户/欢迎使用.md",
+            "navi_index": "",
             "navi_expand_level": 0
         },
         {
             "text": "摄影",
             "target": "摄影/vx.json",
             "navi": true,
-            "navi_index": "../#!viki/用户/欢迎使用.md",
+            "navi_index": "",
             "navi_expand_level": 0
         },
         {
