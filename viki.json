@@ -2,7 +2,7 @@
     "brand": "viki",
     "brand_icon": "css/viki_white.svg",
     "title": "www.qqxz.com",
-    "favicon": "https://cdn.jsdelivr.net/gh/szqq0512/Pic/img/202201221728331.ico",
+    "favicon": "https://raw.staticdn.net/szqq0512/Pic/main/img/202201221728331.ico",
     "footer": "",
     "show_suffix": false,
     "load_before_search": true,

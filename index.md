@@ -1,4 +1,4 @@
-![](https://cdn.jsdelivr.net/gh/szqq0512/Pic/img/202202112050167.webp)
+![](https://raw.staticdn.net/szqq0512/Pic/main/img/202202112050167.webp)
 
 # 青青小竹网  
   
