@@ -8,19 +8,21 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 h1 {
-    font-size: 20px;
+    font-size: 22px;
 }
 
 h2 {
     font-size: 18px;
+    padding: 6px 0px 0px 0px;
 }
 
 h3 {
-    font-size: 16px;
+    font-size: 14px;
+    padding: 6px 0px 0px 0px;
 }
 
 h4 {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 h5 {
