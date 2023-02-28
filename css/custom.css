@@ -13,7 +13,8 @@ h1 {
 
 h2 {
     font-size: 18px;
-    padding: 6px 0px 0px 0px;
+    margin: 12px 0px 4px 0px;
+    padding: 0px 0px 0px 0px;
 }
 
 h3 {
@@ -33,7 +34,7 @@ h6 {
 }
 
 ul{
-    margin: 0px 0px 10px 0px;
+    margin: 0px 0px 0px 0px;
     list-style-position: inside;
     padding: 0;
 }
@@ -46,11 +47,11 @@ u {
     font-style: normal;
 }
 p {
-    line-height: 1.7em;
+    line-height: 1.5em;
     text-align: justify;
     text-justify: inter-ideograph; 
     text-justify: ideographic;
-    margin: 12px 0px; 
+    margin: 4px 0px 4px 0px; 
     margin-after: 0.5em;
 }
 li{
