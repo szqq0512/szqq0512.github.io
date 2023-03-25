@@ -13,8 +13,8 @@ h1 {
 
 h2 {
     font-size: 18px;
-    margin: 12px 0px 4px 0px;
-    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    padding: 8px 0px 8px 0px;
 }
 
 h3 {
@@ -34,9 +34,9 @@ h6 {
 }
 
 ul{
-    margin: 0px 0px 0px 0px;
+    margin: 0px 0px 20px 0px;
     list-style-position: inside;
-    padding: 0;
+    padding: 0px;
 }
 em {
     color: #346c91;
@@ -47,11 +47,12 @@ u {
     font-style: normal;
 }
 p {
-    line-height: 1.5em;
+    line-height: 1.6em;
     text-align: justify;
     text-justify: inter-ideograph; 
     text-justify: ideographic;
-    margin: 4px 0px; 
+    margin: 0px 0px 0px 0px; 
+    padding: 0px 0px 12px 0px;
     margin-after: 0.5em;
 }
 li{
