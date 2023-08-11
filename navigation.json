@@ -15,30 +15,30 @@
         },
         {
             "text": "综合介绍",
-            "target": "旅游/vx.json",
+            "target": "旅游/综合介绍/中国历史人文介绍/概述.md",
             "navi": true,
-            "navi_index": "综合介绍/中国历史人文介绍/概述.md",
+            "navi_index": "",
             "navi_expand_level": 0
         },
         {
             "text": "旅行指南",
-            "target": "旅游/vx.json",
+            "target": "旅游/旅行指南/旅行注意事项/旅游百事通.md",
             "navi": true,
-            "navi_index": "旅行指南/旅行注意事项/旅游百事通.md",
+            "navi_index": "",
             "navi_expand_level": 0
         },
         {
             "text": "出境旅行",
-            "target": "旅游/vx.json",
+            "target": "旅游/出境旅行/日本旅游签证.md",
             "navi": true,
-            "navi_index": "出境旅行/日本旅游签证.md",
+            "navi_index": "",
             "navi_expand_level": 0
         },
         {
             "text": "收藏夹",
-            "target": "旅游/vx.json",
+            "target": "旅游/网上相关链接/收藏夹.md",
             "navi": true,
-            "navi_index": "网上相关链接/收藏夹.md",
+            "navi_index": "",
             "navi_expand_level": 0
         }
     ]
