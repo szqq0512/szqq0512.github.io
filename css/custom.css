@@ -61,6 +61,7 @@ li{
 }
 li:not(.nav-item):nth-child(odd){background-color:rgb(230, 230, 230);} 
 
-a {
-    text-decoration:none;
-    }
+a:active,a:focus,a:hover {
+    color: #ff8400;
+    text-decoration: underline;
+}
