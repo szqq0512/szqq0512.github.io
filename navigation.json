@@ -9,7 +9,6 @@
         {
             "text": "各地资料",
             "target": "旅游/vx.json",
-            "target": "_self",
             "navi": true,
             "navi_index": "中国各地旅游资源/华东地区/江苏省/苏州市.md",
             "navi_expand_level": 0
