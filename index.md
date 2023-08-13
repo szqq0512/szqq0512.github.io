@@ -9,7 +9,3 @@
 旅游栏目：[各地资料](旅游/中国各地旅游资源/华东地区/江苏省/苏州市.md)  [综合介绍](旅游/综合介绍/中国历史人文介绍/概述.md)  [旅行指南](旅游/旅行指南/旅行注意事项/旅游百事通.md)  [出境旅行](旅游/出境旅行/日本旅游签证.md)  [收藏夹](旅游/网上相关链接/收藏夹.md)
 
 ~~其他栏目：[摄影](摄影/vx.json)（笔记和展示）、[阅读](阅读/vx.json)、[VIKI](viki/vx.json)（技术文档）~~
-1111
-<a href="https://www.infoq.cn/profile/1089469/publish" target="_blank">Brave Heart</a>
-
-<a href="http://example.com/" target="_blank">example</a>
