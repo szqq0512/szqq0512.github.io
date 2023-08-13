@@ -60,3 +60,7 @@ li{
     padding: 2px 0px;
 }
 li:not(.nav-item):nth-child(odd){background-color:rgb(230, 230, 230);} 
+
+a {
+    text-decoration:none;
+    }
