@@ -65,3 +65,7 @@ a:active,a:focus,a:hover {
     color: #ff8400;
     text-decoration: underline;
 }
+
+a:link {
+    text-decoration:none;
+}
