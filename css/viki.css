@@ -1,6 +1,4 @@
 body {
-    font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", "冬青黑体", "Microsoft YaHei", "微软雅黑", "Microsoft YaHei UI", "WenQuanYi Micro Hei", "文泉驿雅黑", Dengxian, "等线体", STXihei, "华文细黑", "Liberation Sans", "Droid Sans", NSimSun, "新宋体", SimSun, "宋体";
-    color: #222222;
     background: #F5F5F5;
 }
 
@@ -30,174 +28,135 @@ span.viki-img-caption {
     line-height: 1.5;
 }
 
-/* View Image */
-.viki-view-image,.viki-view-svg {
-    transition: 0.3s;
+/* View Image */  
+.viki-view-image,  
+.viki-view-svg {  
+    transition: 0.3s;  
+}  
+  
+/* Modal Box */  
+.viki-modal-box {  
+    display: none; /* 隐藏模态框，默认状态 */  
+    position: fixed; /* 位置固定 */  
+    z-index: 2000; /* 层级高 */  
+    padding-top: 50px; /* 上方留白 */  
+    left: 0; /* 左边对齐 */  
+    top: 0; /* 上边对齐 */  
+    width: 100%; /* 全宽 */  
+    height: 100%; /* 全高 */  
+    overflow: hidden; /* 超出部分隐藏 */  
+    background-color: rgba(234, 234, 234, 0.95); /* 半透明的背景色 */  
+}  
+  
+.viki-modal-content {  
+    margin: auto; /* 自动边距，居中显示 */  
+    display: block; /* 显示内容 */  
+    width: auto; /* 自适应宽度 */  
+    height: auto; /* 自适应高度 */  
+    cursor: move; /* 光标样式为移动 */  
 }
 
-.viki-modal-box {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    padding-top: 50px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: rgb(234, 234, 234);
-    background-color: rgba(234, 234, 234, 0.95);
-    z-index: 2000;
+/* Add Animation */  
+.viki-modal-content {  
+    animation: zoom 0.6s;  
+}  
+  
+@keyframes zoom {  
+    from {transform:scale(0)}  
+    to {transform:scale(1)}  
+}  
+  
+/* The Close Button */  
+span.viki-modal-close {  
+    position: absolute;  
+    z-index: 2002;  
+    top: 15px;  
+    right: 35px;  
+    color: #666666;  
+    font-size: 40px;  
+    font-weight: bold;  
+    transition: 0.3s;  
 }
-
-.viki-modal-content {
-    margin: auto;
-    display: block;
-    width: auto;
-    height: auto;
-    cursor: move;
+span.viki-modal-close:hover, span.viki-modal-close:focus {  
+    color: #222222;  
+    text-decoration: none;  
+    cursor: pointer;  
 }
-
-/* Add Animation */
-.viki-modal-content {
-    -webkit-animation-name: zoom;
-    -webkit-animation-duration: 0.6s;
-    animation-name: zoom;
-    animation-duration: 0.6s;
-}
-
-@-webkit-keyframes zoom {
-    from {-webkit-transform:scale(0)}
-    to {-webkit-transform:scale(1)}
-}
-
-@keyframes zoom {
-    from {transform:scale(0)}
-    to {transform:scale(1)}
-}
-
-/* The Close Button */
-span.viki-modal-close {
-    position: absolute;
-    z-index: 2002;
-    top: 15px;
-    right: 35px;
-    color: #666666;
-    font-size: 40px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-span.viki-modal-close:hover,
-span.viki-modal-close:focus {
-    color: #222222;
-    text-decoration: none;
-    cursor: pointer;
-}
-/* View Image */
-
-pre {
-    display: block;
-    overflow-y: hidden;
-    overflow-x: auto;
-}
-
-code {
-    font-family: Consolas, Monaco, Monospace, Courier;
-    color: #8E24AA;
-    word-break: break-all;
-}
-
-pre code {
-    display: block;
-    overflow-x: auto;
-    padding: 0.5em;
-    color: #222222;
-    background-color: #E0E0E0;
-    border-left: .5em solid #00897B;
-    font-family: Consolas, Monaco, Monospace, Courier;
-    white-space: pre;
-}
-
-pre code.viki-markdown-metadata {
-    border-left: .5rem solid #80CBC4;
-}
-
-blockquote {
-    color: #666;
-    border-left: .5em solid #7a7a7a;
-    padding: 0 1em;
-    margin-left: 0;
-}
-
-blockquote p {
-    color: #666;
-}
-
-div.viki-mermaid-diagram {
-    margin: 16px 0px 16px 0px;
-    overflow-y: hidden;
-}
-
-div.viki-flowchart-diagram {
-    padding: 0px 5px 0px 5px;
-    margin: 16px 0px 16px 0px;
-    width: fit-content;
-    overflow: hidden;
-}
-
-div.viki-wavedrom-diagram {
-    padding: 0px 5px 0px 5px;
-    margin: 16px 0px 16px 0px;
-    width: fit-content;
-    overflow: hidden;
-}
-
-div.viki-plantuml-diagram {
-    padding: 5px 5px 0px 5px;
-    margin: 16px 0px 16px 0px;
-    width: fit-content;
-    overflow: hidden;
-}
-
-table {
-   padding: 0;
-   margin: 1rem 0.5rem;
-   border-collapse: collapse;
-}
-
-table tr {
-   border-top: 2px solid #cccccc;
-   background-color: white;
-   margin: 0;
-   padding: 0;
-}
-
-table tr:nth-child(2n) {
-   background-color: #f8f8f8;
-}
-
-table tr th {
-   font-weight: bold;
-   border: 2px solid #cccccc;
-   margin: 0;
-   padding: 6px 13px;
-}
-
-table tr td {
-   border: 2px solid #cccccc;
-   margin: 0;
-   padding: 6px 13px;
-}
-
-table tr th :first-child, table tr td :first-child {
-   margin-top: 0;
-}
-
-table tr th :last-child, table tr td :last-child {
-   margin-bottom: 0;
-}
-
+/* View Image */  
+  
+pre {  
+    display: block;  
+    overflow-y: hidden;  
+    overflow-x: auto;  
+  }  
+    
+  code,  
+  pre code {  
+    font-family: Consolas, Monaco, Monospace, Courier;  
+    color: #8E24AA;  
+    word-break: break-all;  
+  }  
+    
+  pre code {  
+    display: block;  
+    overflow-x: auto;  
+    padding: 0.5em;  
+    color: #222222;  
+    background-color: #E0E0E0;  
+    border-left: 0.5em solid #00897B;  
+  }  
+    
+  pre code.viki-markdown-metadata {  
+    border-left-color: #80CBC4;  
+  }  
+    
+  blockquote {  
+    color: #666;  
+    border-left: 0.5em solid #7a7a7a;  
+    padding: 0 1em;  
+    margin-left: 0;  
+  }  
+    
+  div.viki-mermaid-diagram,  
+  div.viki-flowchart-diagram,  
+  div.viki-wavedrom-diagram,  
+  div.viki-plantuml-diagram {  
+    margin: 16px 0;  
+    overflow-y: hidden;  
+    width: fit-content;  
+  }
+  :root {  
+    --border-color: #cccccc;  
+  }  
+    
+  table {  
+    padding: 0;  
+    margin: 1rem 0.5rem;  
+  }  
+    
+  table tr {  
+    border-top: 2px solid var(--border-color);  
+    background-color: white;  
+  }  
+    
+  table tr:nth-child(2n) {  
+    background-color: #f8f8f8;  
+  }  
+    
+  table tr th, table tr td {  
+    border: 2px solid var(--border-color);  
+    margin: 0;  
+    padding: 6px 13px;  
+  }  
+    
+  /* 以下两个样式可直接写在 tr 中，不必单独列出 */  
+  table tr th:first-child, table tr td:first-child {  
+    margin-top: 0;  
+  }  
+    
+  table tr th:last-child, table tr td:last-child {  
+    margin-bottom: 0;  
+  }
 /* For Highlight.js Line Number */
 table.hljs-ln tr {
     border: none;
@@ -230,34 +189,33 @@ table.hljs-ln tr td.hljs-ln-code {
 }
 /* For Highlight.js Line Number */
 
-/* Mathjax */
-x-eqs {
-    display: flex;
-    flex-direction: row;
-    align-content: space-between;
-    align-items: center;
-}
-
-x-eqs > x-eqn {
-    width: 100%;
-    margin-left: 3rem;
-}
-
-x-eqs > span {
-    text-align:right;
-}
+/* Mathjax */  
+.x-eqs {  
+    display: flex;  
+    flex-direction: row;  
+    align-items: center;  
+    justify-content: space-between; /* align-content 与 justify-content 通常一起使用，保持代码的一致性 */  
+}  
+  
+.x-eqs > .x-eqn {  
+    width: 100%;  
+    margin-left: 3rem;  
+}  
+  
+.x-eqs > span {  
+    text-align: right;  
+}  
 /* Mathjax */
 
 .viki-toc {
     position: -webkit-sticky;
     position: sticky;
-    top: 4rem;
-    height: calc(100vh - 4rem);
-    overflow: auto;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    font-size: .875rem;
-    white-space: nowrap;
+    top: 4rem;  
+    height: calc(100vh - 4rem);  
+    overflow: auto;  
+    padding: 1.5rem 0;  
+    font-size: .875rem;  
+    white-space: nowrap;  
 }
 
 .viki-toc > ul {
@@ -269,17 +227,17 @@ x-eqs > span {
 }
 
 .viki-toc ul ul {
-    padding-left: 1.5rem;
+    padding-left: 1rem;
 }
 
 .viki-toc a {
     color: #808080;
 }
 
-.viki-navbar {
-    min-height: 4rem;
-    background-color: #00796B;
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+.viki-navbar {  
+    min-height: 4rem;  
+    background-color: #00796B;  
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), 0 -1px 0 rgba(0,0,0,.1); /* 注意这里的简写 */  
 }
 
 .navbar-brand-icon {
@@ -291,7 +249,7 @@ x-eqs > span {
     display: inline-block;
     width: 1rem;
     height: 1rem;
-    vertical-align: text-top;
+    vertical-align: middle;  /* 注意这里，'text-top'对非文字元素可能不会产生预期效果，通常我们使用 'middle' */  
 }
 
 .viki-navbar .navbar-nav-icon:hover {
@@ -334,7 +292,7 @@ x-eqs > span {
     .viki-content > h1[id]::before, .viki-content > h2[id]::before, .viki-content > h3[id]::before, .viki-content > h4[id]::before, .viki-content > h5[id]::before, .viki-content > h6[id]::before {
         display: block;
         height: 6rem;
-        margin-top: -6rem;
+        margin-top: -5rem;
         visibility: hidden;
         content: "";
     }
@@ -427,9 +385,6 @@ x-eqs > span {
 .viki-footer a {
     font-weight: 500;
     color: #495057;
-}
-
-.viki-footer-row {
 }
 
 .viki-footer-viki {
