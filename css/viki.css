@@ -227,7 +227,7 @@ table.hljs-ln tr td.hljs-ln-code {
 }
 
 .viki-toc ul ul {
-    padding-left: 1rem;
+    padding-left: 0.5rem;
 }
 
 .viki-toc a {
