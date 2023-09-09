@@ -210,8 +210,8 @@ table.hljs-ln tr td.hljs-ln-code {
 .viki-toc {
     position: -webkit-sticky;
     position: sticky;
-    top: 4rem;  
-    height: calc(100vh - 4rem);  
+    top: 3rem;  
+    height: calc(100vh - 3rem);  
     overflow: auto;  
     padding: 1.5rem 0;  
     font-size: .875rem;  
@@ -273,18 +273,21 @@ table.hljs-ln tr td.hljs-ln-code {
 
 .viki-content > h1[id], .viki-content > h2[id], .viki-content > h3[id], .viki-content > h4[id], .viki-content > h5[id], .viki-content > h6[id] {
     pointer-events: none;
+    margin-left: 0.5rem;
 }
 
 .viki-content > h1[id] > a, .viki-content > h2[id] > a, .viki-content > h3[id] > a, .viki-content > h4[id] > a, .viki-content > h5[id] > a, .viki-content > h6[id] > a {
     pointer-events: auto;
+    margin-left: 0.5rem;
 }
 
 .viki-content > h1[id] > div, .viki-content > h2[id] > div, .viki-content > h3[id] > div, .viki-content > h4[id] > div, .viki-content > h5[id] > div, .viki-content > h6[id] > div {
     pointer-events: auto;
+    margin-left: 0.5rem;
 }
 
 .viki-content {
-    margin-top: 1rem;
+    margin-top: 0rem;
 }
 
 /* Tricks for sticky header. */
