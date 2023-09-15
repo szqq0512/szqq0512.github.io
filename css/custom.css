@@ -31,9 +31,9 @@ p {
     text-align: justify;  
     margin: 4px 0;  
 }
-li{
+.viki-content li{
     list-style: none;
-    padding: 2px 0;
+    padding: 3px;
 }
 li:not(.nav-item):nth-child(2n+1) {  
     background-color: #E6E6E6;  
@@ -55,4 +55,8 @@ a:link {
 .viki-content > p {
     padding: 3px 0;
     padding-left: 0.5rem;
+}
+
+.viki-content ul {
+    margin-top: 0.5rem;
 }

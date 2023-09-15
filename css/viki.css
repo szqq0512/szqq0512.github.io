@@ -294,8 +294,8 @@ table.hljs-ln tr td.hljs-ln-code {
 @media (min-width: 768px) {
     .viki-content > h1[id]::before, .viki-content > h2[id]::before, .viki-content > h3[id]::before, .viki-content > h4[id]::before, .viki-content > h5[id]::before, .viki-content > h6[id]::before {
         display: block;
-        height: 6rem;
-        margin-top: -5rem;
+        height: 1rem;
+        margin-top: -0.5rem;
         visibility: hidden;
         content: "";
     }
