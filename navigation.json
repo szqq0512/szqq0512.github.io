@@ -8,35 +8,56 @@
         },
         {
             "text": "各地资料",
-            "target": "旅游/vx.json",
+            "target": "旅游/中国各地旅游资源/vx.json",
             "navi": true,
-            "navi_index": "中国各地旅游资源/华北地区/北京市/解读北京/北京市概览.md",
+            "navi_index": "华北地区/北京市/解读北京/北京市概览.md",
             "navi_expand_level": 0
         },
         {
             "text": "综合介绍",
-            "target": "旅游/综合介绍/中国历史人文介绍/概述.md",
+            "target": "旅游/综合介绍/vx.json",
             "navi": true,
-            "navi_index": "",
+            "navi_index": "中国历史人文介绍/概述.md",
             "navi_expand_level": 0
         },
         {
             "text": "旅行指南",
-            "target": "旅游/旅行指南/旅行注意事项/旅游百事通.md",
+            "target": "旅游/旅行指南/vx.json",
             "navi": true,
-            "navi_index": "",
+            "navi_index": "旅行注意事项/旅游百事通.md",
             "navi_expand_level": 0
         },
         {
             "text": "出境旅行",
-            "target": "旅游/出境旅行/日本旅游签证.md",
+            "target": "旅游/出境旅行/vx.json",
+            "navi": true,
+            "navi_index": "坐火车去老挝怎么买票.md",
+            "navi_expand_level": 0
+        },
+        {
+            "text": "收藏夹",
+            "target": "旅游/网上相关链接/vx.json",
+            "navi": true,
+            "navi_index": "收藏夹.md",
+            "navi_expand_level": 0
+        },
+        {
+            "text": "",
+            "target": "摄影/vx.json",
             "navi": true,
             "navi_index": "",
             "navi_expand_level": 0
         },
         {
-            "text": "收藏夹",
-            "target": "旅游/网上相关链接/收藏夹.md",
+            "text": "",
+            "target": "阅读/vx.json",
+            "navi": true,
+            "navi_index": "",
+            "navi_expand_level": 0
+        },
+        {
+            "text": "",
+            "target": "VIKI/vx.json",
             "navi": true,
             "navi_index": "",
             "navi_expand_level": 0
