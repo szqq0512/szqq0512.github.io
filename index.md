@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/szqq0512/Pic/main/img/202202112050167.webp)
+![](https://raw.gitmirror.com/szqq0512/Pic/main/img/202202112050167.webp)
 
 # 青青小竹网  
   
