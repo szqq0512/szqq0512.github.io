@@ -14,7 +14,7 @@ h3 { font-size: 18px; }
 h4, h5, h6 { font-size: 16px; }  
 
 ul {  
-    margin-bottom: 20px;  
+    margin: 0px;  
     list-style: none;  
     padding: 0;  
 } 
@@ -58,5 +58,21 @@ a:link {
 }
 
 .viki-content ul {
-    margin-top: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+  blockquote {  
+    color: #666;  
+    border-left: 0.2em solid #7a7a7a;  
+    padding: 0 .6em;  
+    margin-left: 20px;  
+  }  
+
+  table tr {  
+    borde: 2px solid var(--border-color);  
+    background-color: white;  
+  }  
+
+.viki-content {
+    margin: 0rem;
 }
