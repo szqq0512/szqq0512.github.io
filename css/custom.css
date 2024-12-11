@@ -29,7 +29,8 @@ u {
 p {  
     line-height: 1.6em;  
     text-align: justify;  
-    margin: 4px 0;  
+    margin: 5px 0; 
+    letter-spacing: 1px;
 }
 .viki-content li{
     list-style: none;
@@ -58,14 +59,20 @@ a:link {
 }
 
 .viki-content ul {
-    margin: 0.5rem 0;
+    margin: 1rem 0;
+}
+
+.viki-content ul li {
+    margin: 0;
+    letter-spacing: 1px;
+    line-height: 1.6em;  
 }
 
   blockquote {  
     color: #666;  
     border-left: 0.2em solid #7a7a7a;  
     padding: 0 .6em;  
-    margin-left: 20px;  
+    margin: -8px 0 -4px 20px;  
   }  
 
   table tr {  
@@ -75,4 +82,9 @@ a:link {
 
 .viki-content {
     margin: 0rem;
+}
+
+hr {
+    margin: 0 0 10px 0; 
+    height: 0;  
 }
