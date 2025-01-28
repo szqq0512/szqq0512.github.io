@@ -1,26 +1,29 @@
-/*
-
-Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
-
-*/
+:root {
+  --base-color: #363636;
+  --comment-color: #767676;
+  --keyword-color: #0000ee;
+  --string-number-color: #880000;
+  --regexp-symbol-color: #BC6060;
+  --literal-color: #af00d7;
+  --builtin-color: #008700;
+  --meta-color: #1f7199;
+  --meta-string-color: #4d99bf;
+}
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
   background: #E0E0E0;
+  color: var(--base-color);
 }
 
-
-/* Base color: saturation 0; */
-
-.hljs,
 .hljs-subst {
-  color: #363636;
+  color: var(--base-color);
 }
 
 .hljs-comment {
-  color: #767676;
+  color: var(--comment-color);
 }
 
 .hljs-keyword,
@@ -29,11 +32,8 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-meta-keyword,
 .hljs-doctag,
 .hljs-name {
-  color: #0000ee;
+  color: var(--keyword-color);
 }
-
-
-/* User color: hue: 0 */
 
 .hljs-type,
 .hljs-string,
@@ -42,13 +42,14 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-selector-class,
 .hljs-quote,
 .hljs-template-tag,
-.hljs-deletion {
-  color: #880000;
+.hljs-deletion,
+.hljs-title,
+.hljs-section {
+  color: var(--string-number-color);
 }
 
 .hljs-title,
 .hljs-section {
-  color: #880000;
   font-weight: bold;
 }
 
@@ -59,36 +60,27 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-link,
 .hljs-selector-attr,
 .hljs-selector-pseudo {
-  color: #BC6060;
+  color: var(--regexp-symbol-color);
 }
 
-
-/* Language color: hue: 90; */
-
 .hljs-literal {
-  color: #af00d7;
+  color: var(--literal-color);
 }
 
 .hljs-built_in,
 .hljs-bullet,
 .hljs-code,
 .hljs-addition {
-  color: #008700;
+  color: var(--builtin-color);
 }
 
-
-/* Meta color: hue: 200 */
-
 .hljs-meta {
-  color: #1f7199;
+  color: var(--meta-color);
 }
 
 .hljs-meta-string {
-  color: #4d99bf;
+  color: var(--meta-string-color);
 }
-
-
-/* Misc effects */
 
 .hljs-emphasis {
   font-style: italic;

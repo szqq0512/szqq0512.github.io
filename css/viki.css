@@ -1,433 +1,237 @@
+:root {
+    --primary-color: #00897B;
+    --text-color: #222;
+    --link-color: #0066CC;
+    --link-hover: #004499;
+    --border-color: #CCC;
+    --code-bg: #E0E0E0;
+    --nav-bg: #00796B;
+    --footer-bg: #EEEEEE;
+}
+
+/* 基础样式 */
 body {
     background: #F5F5F5;
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
 a {
+    color: var(--link-color);
+    text-decoration: none; /* 确保无下划线 */
     word-break: break-all;
+    transition: color 0.2s;
+    font-weight: 500;
+}
+a:hover {
+    color: var(--link-hover);
+    text-decoration: none; /* 明确移除悬停下划线 */
 }
 
-.viki-img-package {
-    text-align: center;
+/* 图片相关 */
+.viki-img-package { text-align: center; }
+img.viki-img-center { 
+    display: block; 
+    margin: 0 auto; 
+    max-width: 100%;
 }
-
-img.viki-img-center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 span.viki-img-caption {
-    min-width: 20%;
-    max-width: 80%;
     display: inline-block;
-    padding: 10px;
-    margin: 0 auto;
-    border-bottom: 1px solid #c0c0c0;
-    color: #6c6c6c;
-    text-align: center;
-    line-height: 1.5;
+    min-width: 20%; 
+    max-width: 80%;
+    padding: 10px; 
+    margin: 10px auto 0;
+    color: #6C6C6C;
+    font-size: 0.9em;
 }
 
-/* View Image */  
-.viki-view-image,  
-.viki-view-svg {  
-    transition: 0.3s;  
-}  
-  
-/* Modal Box */  
-.viki-modal-box {  
-    display: none; /* 隐藏模态框，默认状态 */  
-    position: fixed; /* 位置固定 */  
-    z-index: 2000; /* 层级高 */  
-    padding-top: 50px; /* 上方留白 */  
-    left: 0; /* 左边对齐 */  
-    top: 0; /* 上边对齐 */  
-    width: 100%; /* 全宽 */  
-    height: 100%; /* 全高 */  
-    overflow: hidden; /* 超出部分隐藏 */  
-    background-color: rgba(234, 234, 234, 0.95); /* 半透明的背景色 */  
-}  
-  
-.viki-modal-content {  
-    margin: auto; /* 自动边距，居中显示 */  
-    display: block; /* 显示内容 */  
-    width: auto; /* 自适应宽度 */  
-    height: auto; /* 自适应高度 */  
-    cursor: move; /* 光标样式为移动 */  
+/* 模态框 */
+.viki-modal-box {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    padding-top: 50px;
+    background: rgba(234, 234, 234, 0.95);
+}
+.viki-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 80vh;
+    animation: zoom 0.6s;
+}
+@keyframes zoom { 
+    from { transform: scale(0.8); opacity: 0 } 
+    to { transform: scale(1); opacity: 1 } 
 }
 
-/* Add Animation */  
-.viki-modal-content {  
-    animation: zoom 0.6s;  
-}  
-  
-@keyframes zoom {  
-    from {transform:scale(0)}  
-    to {transform:scale(1)}  
-}  
-  
-/* The Close Button */  
-span.viki-modal-close {  
-    position: absolute;  
-    z-index: 2002;  
-    top: 15px;  
-    right: 35px;  
-    color: #666666;  
-    font-size: 40px;  
-    font-weight: bold;  
-    transition: 0.3s;  
+span.viki-modal-close {
+    position: absolute;
+    z-index: 2002;
+    top: 15px; 
+    right: 35px;
+    color: #666;
+    font: 40px bold;
+    cursor: pointer;
+    transition: 0.3s;
 }
-span.viki-modal-close:hover, span.viki-modal-close:focus {  
-    color: #222222;  
-    text-decoration: none;  
-    cursor: pointer;  
-}
-/* View Image */  
-  
-pre {  
-    display: block;  
-    overflow-y: hidden;  
-    overflow-x: auto;  
-  }  
-    
-  code,  
-  pre code {  
-    font-family: Consolas, Monaco, Monospace, Courier;  
-    color: #8E24AA;  
-    word-break: break-all;  
-  }  
-    
-  pre code {  
-    display: block;  
-    overflow-x: auto;  
-    padding: 0.5em;  
-    color: #222222;  
-    background-color: #E0E0E0;  
-    border-left: 0.5em solid #00897B;  
-  }  
-    
-  pre code.viki-markdown-metadata {  
-    border-left-color: #80CBC4;  
-  }  
-    
-  blockquote {  
-    color: #666;  
-    border-left: 0.5em solid #7a7a7a;  
-    padding: 0 1em;  
-    margin-left: 0;  
-  }  
-    
-  div.viki-mermaid-diagram,  
-  div.viki-flowchart-diagram,  
-  div.viki-wavedrom-diagram,  
-  div.viki-plantuml-diagram {  
-    margin: 16px 0;  
-    overflow-y: hidden;  
-    width: fit-content;  
-  }
-  :root {  
-    --border-color: #cccccc;  
-  }  
-    
-  table {  
-    padding: 0;  
-    margin: 1rem 0.5rem;  
-  }  
-    
-  table tr {  
-    border-top: 2px solid var(--border-color);  
-    background-color: white;  
-  }  
-    
-  table tr:nth-child(2n) {  
-    background-color: #f8f8f8;  
-  }  
-    
-  table tr th, table tr td {  
-    border: 2px solid var(--border-color);  
-    margin: 0;  
-    padding: 6px 13px;  
-  }  
-    
-  /* 以下两个样式可直接写在 tr 中，不必单独列出 */  
-  table tr th:first-child, table tr td:first-child {  
-    margin-top: 0;  
-  }  
-    
-  table tr th:last-child, table tr td:last-child {  
-    margin-bottom: 0;  
-  }
-/* For Highlight.js Line Number */
-table.hljs-ln tr {
-    border: none;
-    background-color: transparent;
+span.viki-modal-close:hover { 
+    color: #222; 
+    transform: rotate(90deg);
 }
 
-table.hljs-ln tr td {
-    border: none;
-    background-color: transparent;
+/* 代码块 */
+pre { 
+    display: block; 
+    overflow-x: auto;
+    background: var(--code-bg);
+    border-left: 0.5em solid var(--primary-color);
+    padding: 0.5em;
+    margin: 1em 0;
+    border-radius: 4px;
+}
+code { 
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    color: #8E24AA;
+}
+pre code { 
+    color: var(--text-color);
+    background: transparent;
 }
 
-table.hljs-ln tr td.hljs-ln-numbers {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-    text-align: center;
-    color: #AAA;
-    border-right: 1px solid #CCC;
-    vertical-align: top;
-    padding-right: 5px;
-    white-space: nowrap;
+/* 表格 */
+table {
+    margin: 1rem 0;
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+table tr { 
+    border-top: 2px solid var(--border-color) 
+}
+table tr:nth-child(2n) { 
+    background: #F8F8F8 
+}
+table th, table td {
+    border: 1px solid var(--border-color);
+    padding: 12px 15px;
+    text-align: left;
+}
+table th {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-table.hljs-ln tr td.hljs-ln-code {
-    padding-left: 10px;
-}
-/* For Highlight.js Line Number */
-
-/* Mathjax */  
-.x-eqs {  
-    display: flex;  
-    flex-direction: row;  
-    align-items: center;  
-    justify-content: space-between; /* align-content 与 justify-content 通常一起使用，保持代码的一致性 */  
-}  
-  
-.x-eqs > .x-eqn {  
-    width: 100%;  
-    margin-left: 3rem;  
-}  
-  
-.x-eqs > span {  
-    text-align: right;  
-}  
-/* Mathjax */
-
-.viki-toc {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 3rem;  
-    height: calc(100vh - 3rem);  
-    overflow: auto;  
-    padding: 1.5rem 0;  
-    font-size: .875rem;  
-    white-space: nowrap;  
-}
-
-.viki-toc > ul {
-    border-left: 1px solid #ddd;
-}
-
-.viki-toc ul {
-    list-style-type: none;
-}
-
-.viki-toc ul ul {
-    padding-left: 0.5rem;
-}
-
-.viki-toc a {
-    color: #808080;
-}
-
+/* 导航栏 */
 .viki-navbar {  
-    min-height: 4rem;  
-    background-color: #00796B;  
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), 0 -1px 0 rgba(0,0,0,.1); /* 注意这里的简写 */  
+    min-height: 4rem;
+    background: var(--nav-bg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 1rem;
 }
-
-.navbar-brand-icon {
-    border: 1px solid transparent;
-    border-radius: 5px;
+.viki-navbar .nav-link { 
+    color: #B2DFDB;
+    padding: 0 1rem;
+    transition: opacity 0.2s;
 }
-
+.viki-navbar .nav-link:hover {
+    opacity: 0.8;
+}
 .viki-navbar .navbar-nav-icon {
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    vertical-align: middle;  /* 注意这里，'text-top'对非文字元素可能不会产生预期效果，通常我们使用 'middle' */  
+    width: 24px; 
+    height: 24px;
+    vertical-align: middle;
+    transition: transform 0.2s;
+}
+.viki-navbar .navbar-nav-icon:hover { 
+    transform: scale(1.1); 
 }
 
-.viki-navbar .navbar-nav-icon:hover {
-    transform: scale(1.2);
-}
-
-.viki-navbar .navbar-nav .nav-link {
-    padding-right: .5rem;
-    padding-left: .5rem;
-    color: #B2DFDB;
-}
-
+/* 响应式导航 */
 @media (min-width: 768px) {
-    .viki-navbar {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-        z-index: 1071;
+    .viki-navbar { 
+        position: sticky; 
+        top: 0; 
+        z-index: 1071 
     }
 }
 
-.viki-content > h1[id], .viki-content > h2[id], .viki-content > h3[id], .viki-content > h4[id], .viki-content > h5[id], .viki-content > h6[id] {
-    pointer-events: none;
-    margin-left: 0.5rem;
-}
-
-.viki-content > h1[id] > a, .viki-content > h2[id] > a, .viki-content > h3[id] > a, .viki-content > h4[id] > a, .viki-content > h5[id] > a, .viki-content > h6[id] > a {
-    pointer-events: auto;
-    margin-left: 0.5rem;
-}
-
-.viki-content > h1[id] > div, .viki-content > h2[id] > div, .viki-content > h3[id] > div, .viki-content > h4[id] > div, .viki-content > h5[id] > div, .viki-content > h6[id] > div {
-    pointer-events: auto;
-    margin-left: 0.5rem;
-}
-
-.viki-content {
-    margin-top: 0rem;
-}
-
-/* Tricks for sticky header. */
-@media (min-width: 768px) {
-    .viki-content > h1[id]::before, .viki-content > h2[id]::before, .viki-content > h3[id]::before, .viki-content > h4[id]::before, .viki-content > h5[id]::before, .viki-content > h6[id]::before {
-        display: block;
-        height: 4rem;
-        margin-top: -3.5rem;
-        visibility: hidden;
-        content: "";
-    }
-}
-
+/* 侧边栏 */
 .viki-sidebar {
     border-bottom: 1px solid rgba(0,0,0,.1);
+    background: white;
 }
-
 @media (min-width: 768px) {
     .viki-sidebar {
-        position: -webkit-sticky;
         position: sticky;
         top: 4rem;
-        z-index: 1000;
         height: calc(100vh - 4rem);
         border-right: 1px solid rgba(0,0,0,.1);
     }
 }
 
-@media (min-width: 1200px) {
-    .viki-sidebar {
-        -ms-flex: 0 1 320px;
-        flex: 0 1 320px;
-    }
+/* 目录 */
+.viki-toc {
+    position: sticky;
+    top: 3rem;
+    height: calc(100vh - 3rem);
+    padding: 1.5rem 0;
+    overflow: auto;
+    font-size: 0.875rem;
+}
+.viki-toc ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+.viki-toc a { 
+    color: #666;
+    display: block;
+    padding: 4px 0;
+}
+.viki-toc a:hover {
+    color: var(--primary-color);
 }
 
-.viki-search {
-    position: relative;
-    padding: 1rem 15px;
-    margin-right: -15px;
-    margin-left: -15px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-}
-
-.algolia-autocomplete {
-    display: block!important;
-    -ms-flex: 1;
-    flex: 1;
-}
-
-.viki-search-docs-toggle {
-    line-height: 1;
-    color: #212529;
-}
-
-.viki-links {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    margin-right: -15px;
-    margin-left: -15px;
-}
-
-@media (min-width: 768px) {
-    .viki-links {
-        max-height: calc(100vh - 9rem);
-        overflow-y: auto;
-        display: block!important;
-    }
-}
-
-.viki-jstree-folder-icon {
-    background-image: url('folder.svg') !important;
-    background-size: cover !important;
-    opacity: 0.6;
-}
-
-.viki-jstree-file-icon {
-    background-image: url('file.svg') !important;
-    background-size: cover !important;
-    opacity: 0.6;
-}
-
+/* 页脚 */
 .viki-footer {
-    font-size: 85%;
-    text-align: center;
-    background-color: #EEEEEE;
+    background: var(--footer-bg);
+    padding: 2rem 1rem;
+    margin-top: 3rem;
 }
-
-@media (min-width: 576px) {
-    .viki-footer {
-        text-align: left;
-    }
-}
-
-.viki-footer p {
-    margin-bottom: 0;
-}
-
-.viki-footer a {
-    font-weight: 500;
+.viki-footer a { 
     color: #495057;
+    font-weight: 500; 
+}
+.viki-footer a:hover { 
+    color: var(--primary-color);
 }
 
-.viki-footer-viki {
-    opacity: 0.8;
+/* 树形图标 */
+.viki-jstree-folder-icon,
+.viki-jstree-file-icon {
+    width: 18px!important;
+    height: 18px!important;
+    background: no-repeat center/contain!important;
+    opacity: 0.6;
 }
+.viki-jstree-folder-icon { background-image: url('folder.svg')!important; }
+.viki-jstree-file-icon { background-image: url('file.svg')!important; }
 
-.form-control:focus {
-  border-color: #00897B;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 137, 123, 0.6);
-}
-
-.viki-anchor {
-    font-weight: 400;
-    color: rgba(0,123,255,.5);
-    transition: color .16s linear;
-    padding-left: 0.375em;
-    -webkit-font-smoothing: antialiased;
-    text-decoration: none;
-    opacity: 0;
-}
-
-.viki-anchor:hover {
-    color: rgba(0,123,255,1);
-    text-decoration: none;
-    opacity: 1;
-}
-
-.viki-anchor::after {
-    content: attr(data-anchor-icon);
-}
-
+/* 打印样式 */
 @media print {
-    #viki-navi, #viki-toc {
-        display: none !important;
+    #viki-navi, #viki-toc { display: none!important }
+    #viki-content { 
+        padding: 0!important;
+        margin: 0!important;
     }
-
-    #viki-content {
-        -ms-flex: 0 0 100% !important;
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-        padding: 3rem 1.5rem !important;
+    pre { 
+        white-space: pre-wrap!important;
+        page-break-inside: avoid;
     }
 }

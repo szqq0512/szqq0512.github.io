@@ -2,21 +2,23 @@
     "brand": "青青小竹",
     "brand_icon": "css/viki_white.svg",
     "title": "青青小竹 www.qqxz.com",
-    "favicon": "https://raw.githubusercontent.com/szqq0512/Pic/main/img/202201221728331.ico",
-    "footer": "",
-    "show_suffix": false,
-    "load_before_search": true,
-    "fuzzy_search": false,
-    "markdown":
-    {
-        "html": true,
-        "breaks": false,
-        "linkify": false,
-        "typographer": false,
-        "lang_prefix": "lang-",
-        "image_caption": true,
-        "plantuml_server": "https://www.plantuml.com/plantuml",
-        "plantuml_format": "svg",
-        "code_block_line_number": false
+    "meta": {
+        "favicon": "//github.com/..."
+    },
+    "features": {
+        "search": {
+            "preload": true,
+            "fuzzy": false,
+            "show_suffix": false
+        },
+        "markdown": {
+            "lang_prefix": "lang-",
+            "image_caption": true,
+            "plantuml": {
+                "server": "https://www.plantuml.com/plantuml",
+                "format": "svg"
+            },
+            "code_line_numbers": false
+        }
     }
 }
