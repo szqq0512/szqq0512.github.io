@@ -1,70 +1,52 @@
-:root {
-    --text-color: #3d3d3d;
-    --heading-color: #e06c75;
-    --em-color: #346c91;
-    --u-color: #c00000;
-    --link-hover-color: #ff8400;
-    --blockquote-color: #666;
-    --blockquote-border-color: #7a7a7a;
-    --odd-li-bg-color: #e6e6e6;
-    --border-color: #ccc; /* 假设的边框颜色 */
-}
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    color: var(--text-color);
+    color: #3d3d3d;
 }
+h1, h2, h3, h4, h5, h6 {  
+    color: #e06c75;  
+    font-weight: bold;  
+    padding: 0;  
+}  
+  
+h1 { font-size: 22px; }  
+h2 { font-size: 20px; }  
+h3 { font-size: 18px; }  
+h4, h5, h6 { font-size: 16px; }  
 
-h1, h2, h3, h4, h5, h6 {
-    color: var(--heading-color);
-    font-weight: bold;
-    padding: 0;
-    margin: 0;
-}
-
-h1 { font-size: 22px; }
-h2 { font-size: 20px; }
-h3 { font-size: 18px; }
-h4, h5, h6 { font-size: 16px; }
-
-ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
+ul {  
+    margin: 0px;  
+    list-style: none;  
+    padding: 0;  
+} 
 em {
-    color: var(--em-color);
+    color: #346c91;
     font-style: normal;
 }
-
 u {
-    color: var(--u-color);
+    color: #c00000;
+    font-style: normal;
 }
-
-p {
-    line-height: 1.6em;
-    text-align: justify;
-    margin: 5px 0;
+p {  
+    line-height: 1.6em;  
+    text-align: justify;  
+    margin: 5px 0; 
     letter-spacing: 1px;
 }
-
-.viki-content li, .viki-toc li {
+.viki-content li{
     list-style: none;
     padding: 3px;
 }
-
-li:not(.nav-item):nth-child(odd) {
-    background-color: var(--odd-li-bg-color);
+li:not(.nav-item):nth-child(2n+1) {  
+    background-color: #E6E6E6;  
 }
 
-a {
-    text-decoration: none;
-}
-
-a:active, a:focus, a:hover {
-    color: var(--link-hover-color);
+a:active,a:focus,a:hover {
+    color: #ff8400;
     text-decoration: underline;
+}
+
+a:link {
+    text-decoration:none;
 }
 
 .viki-toc li {
@@ -72,7 +54,8 @@ a:active, a:focus, a:hover {
 }
 
 .viki-content > p {
-    padding: 3px 0 3px 0.5rem;
+    padding: 3px 0;
+    padding-left: 0.5rem;
 }
 
 .viki-content ul {
@@ -82,27 +65,27 @@ a:active, a:focus, a:hover {
 .viki-content ul li {
     margin: 0;
     letter-spacing: 1px;
-    line-height: 1.6em;
+    line-height: 1.6em;  
 }
 
-blockquote {
-    font-size: 94%;
-    color: var(--blockquote-color);
-    border-left: 0.2em solid var(--blockquote-border-color);
-    padding: 0 0.6em;
-    margin: -8px 0 8px 20px;
-}
+  blockquote {  
+    font-size: 94%; 
+    color: #666;  
+    border-left: 0.2em solid #7a7a7a;  
+    padding: 0 .6em;  
+    margin: -8px 0 8px 20px;  
+  }  
 
-table tr {
-    border: 2px solid var(--border-color);
-    background-color: white;
-}
+  table tr {  
+    borde: 2px solid var(--border-color);  
+    background-color: white;  
+  }  
 
 .viki-content {
-    margin: 0;
+    margin: 0rem;
 }
 
 hr {
-    margin: 0;
-    height: 0;
+    margin: 0; 
+    height: 0;  
 }
