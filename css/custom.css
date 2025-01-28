@@ -77,7 +77,7 @@ a:link {
   }  
 
   table tr {  
-    borde: 2px solid var(--border-color);  
+    border: 2px solid var(--border-color);  
     background-color: white;  
   }  
 
