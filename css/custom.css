@@ -1,91 +1,118 @@
+:root {
+    --text-color: #3d3d3d;
+    --heading-color: #e06c75;
+    --accent-color: #346c91;
+    --error-color: #c00000;
+    --link-hover: #ff8400;
+    --striped-bg: #E6E6E6;
+    --border-color: #7a7a7a;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    color: #3d3d3d;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, 
+                 "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: var(--text-color);
 }
+
 h1, h2, h3, h4, h5, h6 {  
-    color: #e06c75;  
-    font-weight: bold;  
-    padding: 0;  
+    color: var(--heading-color);
+    font-weight: 700;
+    padding: 0;
+    line-height: 1.2;
 }  
-  
-h1 { font-size: 22px; }  
-h2 { font-size: 20px; }  
-h3 { font-size: 18px; }  
-h4, h5, h6 { font-size: 16px; }  
 
-ul {  
-    margin: 0px;  
-    list-style: none;  
-    padding: 0;  
-} 
-em {
-    color: #346c91;
-    font-style: normal;
-}
-u {
-    color: #c00000;
-    font-style: normal;
-}
+h1 { font-size: 1.375rem; }  /* 22px */
+h2 { font-size: 1.25rem; }   /* 20px */
+h3 { font-size: 1.125rem; }  /* 18px */
+h4, h5, h6 { font-size: 1rem; }
+
 p {  
-    line-height: 1.6em;  
-    text-align: justify;  
-    margin: 5px 0; 
-    letter-spacing: 1px;
+    line-height: 1.6;
+    text-align: justify;
+    margin: 5px 0;
+    letter-spacing: 0.0625rem;
 }
-.viki-content li{
+
+ul {
+    margin: 0;
+    padding: 0;
     list-style: none;
-    padding: 3px;
-}
-li:not(.nav-item):nth-child(2n+1) {  
-    background-color: #E6E6E6;  
 }
 
-a:active,a:focus,a:hover {
-    color: #ff8400;
-    text-decoration: underline;
+/* 链接样式 */
+a {
+    color: #0066cc;        /* 常规链接颜色（深蓝色） */
+    text-decoration: none;
+    transition: color 0.2s ease;
+    
+    &:visited {            /* 已访问链接 */
+        color: #551a8b;    /* 标准紫色 */
+    }
+    &:hover,               /* 悬停状态 */
+    &:active,              /* 激活状态 */
+    &:focus {              /* 焦点状态 */
+        color: #dd4b39;    /* 强调红色 */
+        text-decoration: none;
+    }
 }
 
-a:link {
-    text-decoration:none;
+/* 内容区块样式 */
+.viki-content {
+    margin: 0;
+    
+    > p {
+        padding: 3px 0 3px 0.5rem;
+    }
+    
+    ul {
+        margin: 1rem 0;
+        
+        li {
+            margin: 0;
+            padding: 3px;
+            letter-spacing: 0.0625rem;
+            line-height: 1.6;
+        }
+    }
+}
+
+/* 特殊文本样式 */
+em {
+    color: var(--accent-color);
+    font-style: normal;
+}
+
+u {
+    color: var(--error-color);
+    text-decoration: none;
+}
+
+/* 表格和引用样式 */
+blockquote {  
+    font: 94%/1.5 system-ui;
+    color: #666;  
+    border-left: 0.2em solid var(--border-color);
+    padding: 0 0.6em;
+    margin: -8px 0 8px 1.25rem;
+}
+
+table tr {  
+    border: 2px solid var(--border-color);  
+    background-color: #fff;  
+}
+
+/* 通用组件样式 */
+hr {
+    margin: 0;
+    height: 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+li:not(.nav-item):nth-child(odd) {  
+    background-color: var(--striped-bg);  
 }
 
 .viki-toc li {
     padding-left: 0.5rem;
-}
-
-.viki-content > p {
-    padding: 3px 0;
-    padding-left: 0.5rem;
-}
-
-.viki-content ul {
-    margin: 1rem 0;
-}
-
-.viki-content ul li {
-    margin: 0;
-    letter-spacing: 1px;
-    line-height: 1.6em;  
-}
-
-  blockquote {  
-    font-size: 94%; 
-    color: #666;  
-    border-left: 0.2em solid #7a7a7a;  
-    padding: 0 .6em;  
-    margin: -8px 0 8px 20px;  
-  }  
-
-  table tr {  
-    border: 2px solid var(--border-color);  
-    background-color: white;  
-  }  
-
-.viki-content {
-    margin: 0rem;
-}
-
-hr {
-    margin: 0; 
-    height: 0;  
 }

@@ -1,40 +1,47 @@
-/*
-
-Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
-
-*/
+:root {
+  /* 颜色变量 */
+  --code-bg: #E0E0E0;
+  --base-text: #363636;
+  --comment-text: #767676;
+  --keyword-text: #0000ee;
+  --string-number: #880000;
+  --regex-symbol: #BC6060;
+  --literal-text: #af00d7;
+  --builtin-text: #008700;
+  --meta-text: #1f7199;
+  --meta-string: #4d99bf;
+}
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #E0E0E0;
+  background: var(--code-bg);
+  
+  /* 基础文本样式 */
+  &, &-subst {
+    color: var(--base-text);
+  }
 }
 
-
-/* Base color: saturation 0; */
-
-.hljs,
-.hljs-subst {
-  color: #363636;
-}
-
+/* 语法元素颜色分类 */
+/* -------------------------- */
+/* 注释 */
 .hljs-comment {
-  color: #767676;
+  color: var(--comment-text);
 }
 
+/* 关键词 */
 .hljs-keyword,
 .hljs-attribute,
 .hljs-selector-tag,
 .hljs-meta-keyword,
 .hljs-doctag,
 .hljs-name {
-  color: #0000ee;
+  color: var(--keyword-text);
 }
 
-
-/* User color: hue: 0 */
-
+/* 字符串/数字/类型 */
 .hljs-type,
 .hljs-string,
 .hljs-number,
@@ -43,15 +50,17 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-quote,
 .hljs-template-tag,
 .hljs-deletion {
-  color: #880000;
+  color: var(--string-number);
 }
 
+/* 标题/章节 */
 .hljs-title,
 .hljs-section {
-  color: #880000;
-  font-weight: bold;
+  color: var(--string-number);
+  font-weight: 700;
 }
 
+/* 正则/符号 */
 .hljs-regexp,
 .hljs-symbol,
 .hljs-variable,
@@ -59,41 +68,31 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-link,
 .hljs-selector-attr,
 .hljs-selector-pseudo {
-  color: #BC6060;
+  color: var(--regex-symbol);
 }
 
-
-/* Language color: hue: 90; */
-
+/* 字面量 */
 .hljs-literal {
-  color: #af00d7;
+  color: var(--literal-text);
 }
 
+/* 内置函数 */
 .hljs-built_in,
 .hljs-bullet,
 .hljs-code,
 .hljs-addition {
-  color: #008700;
+  color: var(--builtin-text);
 }
 
-
-/* Meta color: hue: 200 */
-
+/* 元数据 */
 .hljs-meta {
-  color: #1f7199;
+  color: var(--meta-text);
+  
+  &-string {
+    color: var(--meta-string);
+  }
 }
 
-.hljs-meta-string {
-  color: #4d99bf;
-}
-
-
-/* Misc effects */
-
-.hljs-emphasis {
-  font-style: italic;
-}
-
-.hljs-strong {
-  font-weight: bold;
-}
+/* 文本修饰 */
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
