@@ -129,7 +129,7 @@ table tr {
 
 /* 优化水平线样式 */
 hr {
-    margin: -0.5rem 0 0 0;
+    margin: 0;
     height: 0;
     border: 0;
     border-top: 1px solid #ddd;
