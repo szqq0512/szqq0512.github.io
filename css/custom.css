@@ -26,8 +26,8 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--heading-color);
     font-weight: 700;
     padding: 0;
-    line-height: 1.2;
-    margin: 0 0 0.5rem 0; /* 增加标题间距 */
+    line-height: 1.8;       /* 优化行高 */
+    margin: 0 0 var(--paragraph-spacing) 0; /* 使用变量控制间距 */
     transform: translateZ(0);
     text-shadow: 0 0 1px rgba(0,0,0,0.1); /* 增强抗锯齿效果 */
     font-synthesis: small-caps; /* 优化小字重显示 */
@@ -35,7 +35,6 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 { 
     font-size: 1.375rem; /* 22px */
-    line-height: 1.3;
 }
 h2 { font-size: 1.25rem; }   /* 20px */
 h3 { font-size: 1.125rem; }  /* 18px */
@@ -130,7 +129,7 @@ table tr {
 
 /* 优化水平线样式 */
 hr {
-    margin: -1.5rem 0 0 0;
+    margin: -0.8rem 0 0 0;
     height: 0;
     border: 0;
     border-top: 1px solid #ddd;
