@@ -129,9 +129,8 @@ table tr {
 
 /* 优化水平线样式 */
 hr {
-    margin: -0.8rem 0 0 0;
+    margin: 0;
     height: 0;
-    border: 0;
     border-top: 1px solid #ddd;
     position: relative;
     z-index: -1; /* 防止覆盖下方内容 */
