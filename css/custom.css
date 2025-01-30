@@ -44,7 +44,7 @@ h4, h5, h6 { font-size: 1rem; }
 p {  
     line-height: 1.8;       /* 优化行高 */
     text-align: justify;
-    margin: 0 0 var(--paragraph-spacing) 0; /* 使用变量控制间距 */
+    margin: var(--paragraph-spacing) 0; /* 使用变量控制间距 */
     letter-spacing: 0.0625rem;
     font-size: 1.1em;       /* 新增字号优化 */
 }
