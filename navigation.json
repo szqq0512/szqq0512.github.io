@@ -40,27 +40,6 @@
             "navi": true,
             "navi_index": "收藏夹.md",
             "navi_expand_level": 0
-        },
-        {
-            "text": "",
-            "target": "摄影/vx.json",
-            "navi": true,
-            "navi_index": "",
-            "navi_expand_level": 0
-        },
-        {
-            "text": "",
-            "target": "阅读/vx.json",
-            "navi": true,
-            "navi_index": "",
-            "navi_expand_level": 0
-        },
-        {
-            "text": "",
-            "target": "VIKI/vx.json",
-            "navi": true,
-            "navi_index": "",
-            "navi_expand_level": 0
         }
     ]
 }
