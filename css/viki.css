@@ -49,8 +49,19 @@ th:last-child, td:last-child { margin-bottom: 0; }
 
 /* Highlight.js Line Number */
 .hljs-ln tr, .hljs-ln td { border: none; background-color: transparent; }
-.hljs-ln-numbers { -webkit-user-select: none; text-align: center; color: #AAA; border-right: 1px solid #CCC; padding-right: 5px; }
 .hljs-ln-code { padding-left: 10px; }
+.hljs-ln-numbers {
+    -webkit-user-select: none; /* 为WebKit浏览器添加前缀 */
+    -moz-user-select: none;    /* 为Firefox浏览器添加前缀 */
+    -ms-user-select: none;     /* 为Internet Explorer和Edge浏览器添加前缀 */
+    user-select: none;         /* 添加标准属性以实现兼容性 */
+  
+    text-align: center;
+    color: #AAA;
+    border-right: 1px solid #CCC;
+    padding-right: 5px;
+  }
+  
 
 /* Mathjax */
 .x-eqs { display: flex; align-items: center; justify-content: space-between; }
@@ -60,10 +71,10 @@ th:last-child, td:last-child { margin-bottom: 0; }
 /* Table of Contents */
 .viki-toc {
     position: sticky; top: 3rem; height: calc(100vh - 3rem); overflow: auto;
-    padding: 1.5rem 0; font-size: .875rem; white-space: nowrap;
+    padding: 1.5rem; font-size: .875rem; white-space: nowrap; 
 }
-.viki-toc ul { list-style-type: none; }
-.viki-toc ul ul { padding-left: 0.5rem; }
+.viki-toc ul { margin-left: -1.5rem; list-style-type: none; }
+.viki-toc ul ul { padding-left: 2.5rem; }
 .viki-toc a { color: #808080; }
 
 /* Navigation Bar Optimization */
@@ -94,7 +105,7 @@ th:last-child, td:last-child { margin-bottom: 0; }
 
 /* Navbar */
 .viki-navbar { min-height: 4rem; background-color: #00796B; box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), 0 -1px 0 rgba(0,0,0,.1); }
-.navbar-brand-icon { border: 1px solid transparent; border-radius: 5px; }
+.navbar-brand-icon { margin-left: 10px; }
 .navbar-nav-icon { display: inline-block; width: 1rem; height: 1rem; vertical-align: middle; }
 .navbar-nav-icon:hover { transform: scale(1.2); }
 .navbar-nav .nav-link { padding: 0.5rem; color: #B2DFDB; }
@@ -104,7 +115,7 @@ th:last-child, td:last-child { margin-bottom: 0; }
     .viki-navbar, .viki-sidebar { position: sticky; top: 0; z-index: 1071; }
     .viki-sidebar { top: 4rem; height: calc(100vh - 4rem); border-right: 1px solid rgba(0,0,0,.1); overflow-y: auto; } /* 解决 jstree 过长无滚动条问题 */
     .viki-content h1::before, .viki-content h2::before, .viki-content h3::before, .viki-content h4::before, .viki-content h5::before, .viki-content h6::before {
-        display: block; height: 4rem; margin-top: -3.5rem; visibility: hidden; content: "";
+        display: block; height: 4rem; margin-top: -5rem; padding-top: 5rem; visibility: hidden; content: "";
     }
 }
 @media (min-width: 1200px) { .viki-sidebar { flex: 0 1 320px; } }

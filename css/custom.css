@@ -1,153 +1,207 @@
+/* ====================== 核心变量系统 ====================== */
 :root {
+    /* 颜色系统 */
     --text-color: #3d3d3d;
     --heading-color: #e06c75;
-    --accent-color: #346c91;
-    --error-color: #c00000;
-    --link-hover: #ff8400;
     --striped-bg: #E6E6E6;
     --border-color: #7a7a7a;
-    /* 新增优化参数 */
-    --paragraph-spacing: 0.35rem; /* 改为rem单位，减少段落间距 */
+    --page-bg: #f9f9f9;
+    --quote-bg: #f8f9fa;
+    --blockquote-color: #e66100;
+
+    /* 排版系统 */
+    --base-font-size: 1rem; /* 16px */
+    --paragraph-spacing: 0.75rem; /* 段落间距 */
+    --line-height-base: 1.6; /* 基础行高 */
+    --line-height-tight: 1.3; /* 紧凑行高 */
+    
+    /* 过渡效果 */
+    --transition-timing: 0.2s ease;
+    
+    /* 响应式断点 */
+    --breakpoint-mobile: 768px;
+}
+
+/* ====================== 基础样式重置 ====================== */
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, 
-                 "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: Consolas, Monaco, "Courier New", "PingFang SC", "Microsoft Yahei", monospace;
     color: var(--text-color);
-    /* 新增优化属性 */
-    background-color: #f9f9f9;
-    line-height: 1.5; /* 降低整体行高 */
-    margin: 0;
-    padding: 0;
-    font-size: 16px; /* 设定基准字号 */
+    background-color: var(--page-bg);
+    line-height: var(--line-height-base);
+    font-size: var(--base-font-size);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+
 }
 
-/* 标题系统 - 保留颜色变量，调整字号和间距 */
-h1, h2, h3, h4, h5, h6 {  
+/* ====================== 标题系统 ====================== */
+h1, h2, h3, h4, h5, h6 {
     color: var(--heading-color);
-    font-weight: 600; /* 降低字重 */
-    padding: 0;
-    margin: 0 0 0.75rem 0; /* 减少底部间距 */
-    line-height: 1.3; /* 紧凑行高 */
-    text-shadow: none; /* 移除抗锯齿效果 */
-    font-synthesis: none; /* 移除小字重优化 */
+    font-weight: 600;
+    line-height: 2;
+    margin: 0 0 0.75rem;
 }
 
 h1 { 
-    font-size: 1.375rem; /* 22px */
-    margin: 1rem 0;
+    font-size: clamp(1.125rem, 1.75vw + 1rem, 1.5rem); /* 进一步缩小 */
 }
+
 h2 { 
-    font-size: 1.25rem; /* 20px */
-    margin-bottom: 0.875rem;
+    font-size: clamp(1rem, 1.5vw + 1rem, 1.25rem); /* 进一步缩小 */
 }
+
 h3 { 
-    font-size: 1.125rem; /* 18px */
-    margin-bottom: 0.75rem;
+    font-size: clamp(0.9375rem, 1.25vw + 1rem, 1.125rem); /* 进一步缩小 */
 }
+
 h4, h5, h6 { 
-    font-size: 1rem;
-    margin-bottom: 0.625rem;
+    font-size: var(--base-font-size);
 }
 
-/* 段落系统 - 合并文字特性 */
-p {  
-    line-height: 1.6;
-    text-align: justify;
-    margin: 0 0 var(--paragraph-spacing) 0; /* 使用变量控制间距 */
-    letter-spacing: normal; /* 移除字符间距 */
-    font-size: 1rem; /* 使用基准字号 */
-}
 
-/* 链接系统 - 保留状态颜色，优化交互 */
 
+/* ====================== 超链接样式调整 ====================== */
 a {
-    color: #0066cc;
-    text-decoration: none;
-    transition: color 0.15s linear all 0.2s ease;
+    text-decoration: none; /* 去掉下划线 */
     &:hover,
     &:active,
     &:focus {
-        color: var(--link-hover); /* 使用变量 */
-        text-decoration: none; /* 取消悬停下划线 */
+        text-decoration: none; /* 去掉悬停下划线 */
+        outline: none; /* 去掉焦点方框 */
     }
 }
 
-/* 内容区块 - 整合布局优化 */
+
+/* ====================== 导航栏样式 ====================== */
+#viki-navi {
+    font-size: 1rem; /* 保持原有字体大小 */
+    color: var(--text-color); /* 保持原有颜色 */
+    font-weight: normal; /* 保持原有字重 */
+    padding: 0.5rem; /* 增加内边距 */
+    line-height: var(--line-height-base);
+}
+
+/* ====================== 引用块样式优化 ====================== */
+blockquote {
+    color: var(--blockquote-color);  
+    border-left: 0.12em solid var(--blockquote-color); 
+    background-color: var(--quote-bg);
+    margin: 0 0 1rem 1rem;
+    padding: 0 0.8rem;
+    font-style: italic;
+    line-height: var(--line-height-base);
+    letter-spacing: 0.01em; /* 增加字符间距 */
+    
+    > p {
+        margin: 0; /* 去掉段落上下间距 */
+        font-size: 0.95em;
+    }
+}
+
+/* ====================== 布局组件优化 ====================== */
+
+
 .viki-content {
     margin: 0 auto;
     max-width: none; 
-    width: calc(100% - 2rem); /* 防止触屏溢出 */
+    width: min(100% - 2rem, 190ch); /* 内容最大宽度 */
+
     > p {
-        letter-spacing: 0.0625rem;
-        padding: 2px 0; /* 减少内边距 */
-        margin-bottom: var(--paragraph-spacing);
+        letter-spacing: 0.065rem;
     }
-    
+     
     ul {
-        margin: 0.75rem 0; /* 减少列表间距 */
+        margin: 0.75rem 0;
         padding: 0;
-        list-style: none;
+        list-style: none; /* 去掉小圆点 */
         
         li {
-            margin: 0 0 0.5rem 0; /* 紧凑列表项间距 */
-            padding: 3px;
-            letter-spacing: 0.0625rem;
-            line-height: 1.6;
+            margin: 0.15rem;
+            padding: 0.15rem 0.5rem;
+            break-inside: avoid; /* 防止列表项被截断 */
+            letter-spacing: 0.065rem;
+
+            &:nth-child(odd) {
+                background-color: var(--striped-bg);
+            }
         }
     }
 }
 
-/* 引用块 - 融合视觉样式 */
-blockquote {  
-    color: #666;  
-    border-left: 0.15em solid var(--border-color); /* 使用主题色 */
-    background-color: #f8f9fa;
-    font-style: italic;
-    margin: 0.5rem 0 0.5rem 1rem; /* 调整外边距 */
-    padding: 0 0.75rem; /* 减少内边距 */
-    > p {
-        font-size: 0.95em; /* 原0.95em → 缩小约10% */
+/* ====================== 表格样式增强 ====================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    
+    tr {
+        border: 1px solid var(--border-color);
+        background-color: #fff;
+        
+        &:nth-child(even) {
+            background-color: var(--striped-bg);
+        }
+    }
+    
+    td, th {
+        padding: 0.75rem;
+        text-align: left;
+        border: 1px solid color-mix(in srgb, var(--border-color) 20% transparent);
     }
 }
 
-
-/* 列表系统 - 保留斑马纹特性 */
-.viki-content ul li:nth-child(odd) {  
-    background-color: var(--striped-bg);  
-    transition: background 0.2s ease; /* 增加过渡效果 */
+/* ====================== 响应式优化 ====================== */
+@media (max-width: 768px) {
+    :root {
+        --paragraph-spacing: 0.5rem;
+        --base-font-size: 0.9375rem;
+    }
+    
+    .viki-content {
+        width: calc(100% - 0.25rem);
+    }
+    li {
+        padding: 0.25rem;
+    }
+    blockquote {
+        margin: -0.5rem 0 1rem;
+        padding: 0 0 0 0.5rem; /* 移动端缩进减少 */
+    }
+    .viki-content ul{
+        list-style: none;  
+        padding: 0;
+    }
+    .viki-content li:nth-child(odd) {
+        background-color: var(--striped-bg); 
+    }
 }
 
-/* 保留特殊文本样式 */
 em {
-    color: var(--accent-color);
+    color: #346c91;
     font-style: normal;
 }
 
-u {
-    color: var(--error-color);
-    text-decoration: none;
-    border-bottom: 1px dotted currentColor; /* 更优雅的下划线 */
-}
-
-/* 表格保留原有样式 */
-table tr {  
-    border: 2px solid var(--border-color);  
-    background-color: #fff;  
-}
-
-/* 优化水平线样式 */
-hr {
-    height: 0;
-    border: 0;
-    border-top: 1px solid #ddd;
-    position: relative;
-    z-index: -1; /* 防止覆盖下方内容 */
-}
-
-/* 三栏布局适配 */
-@media (max-width: 768px) {
-    :root {
-        --paragraph-spacing: 1.2em; /* 移动端减小间距 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
     }
+}
+
+hr {
+    margin: -1rem 0 -0.05rem 0; 
+    height: 0.25rem;  
 }
