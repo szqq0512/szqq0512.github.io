@@ -117,7 +117,6 @@ blockquote {
 .viki-content {
     margin: 0 auto;
     max-width: none; 
-    width: min(100% - 2rem, 190ch); /* 内容最大宽度 */
 
     > p {
         letter-spacing: 0.065rem;
@@ -170,9 +169,6 @@ table {
         --base-font-size: 0.9375rem;
     }
     
-    .viki-content {
-        width: calc(100% - 0.25rem);
-    }
     li {
         padding: 0.25rem;
     }
