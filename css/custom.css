@@ -112,32 +112,27 @@ blockquote {
 }
 
 /* ====================== 布局组件优化 ====================== */
-
-
 .viki-content {
     margin: 0 auto;
     max-width: none; 
-
     > p {
         letter-spacing: 0.065rem;
     }
-     
-    ul {
-        margin: 0.75rem 0;
-        padding: 0;
-        list-style: none; /* 去掉小圆点 */
-        
-        li {
-            margin: 0.15rem;
-            padding: 0.15rem 0.5rem;
-            break-inside: avoid; /* 防止列表项被截断 */
-            letter-spacing: 0.065rem;
+}
+.viki-content ul{
+    margin: 0.75rem 0;
+    list-style: none;  
+    padding: 0;
+}
 
-            &:nth-child(odd) {
-                background-color: var(--striped-bg);
-            }
-        }
-    }
+.viki-content li{
+    margin: 0.15rem;
+    padding: 0.15rem 0.5rem;
+    break-inside: avoid; /* 防止列表项被截断 */
+    letter-spacing: 0.065rem;
+}
+.viki-content li:nth-child(odd) {
+    background-color: var(--striped-bg); 
 }
 
 /* ====================== 表格样式增强 ====================== */
@@ -149,39 +144,13 @@ table {
     tr {
         border: 1px solid var(--border-color);
         background-color: #fff;
-        
-        &:nth-child(even) {
-            background-color: var(--striped-bg);
-        }
+
     }
     
     td, th {
         padding: 0.75rem;
         text-align: left;
         border: 1px solid color-mix(in srgb, var(--border-color) 20% transparent);
-    }
-}
-
-/* ====================== 响应式优化 ====================== */
-@media (max-width: 768px) {
-    :root {
-        --paragraph-spacing: 0.5rem;
-        --base-font-size: 0.9375rem;
-    }
-    
-    li {
-        padding: 0.25rem;
-    }
-    blockquote {
-        margin: -0.5rem 0 1rem;
-        padding: 0 0 0 0.5rem; /* 移动端缩进减少 */
-    }
-    .viki-content ul{
-        list-style: none;  
-        padding: 0;
-    }
-    .viki-content li:nth-child(odd) {
-        background-color: var(--striped-bg); 
     }
 }
 
