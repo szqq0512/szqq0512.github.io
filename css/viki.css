@@ -3,7 +3,7 @@ body { background: #F5F5F5; }
 a { word-break: break-all; }
 
 /* Image Package */
-.viki-img-package { text-align: center; }
+.viki-img-package { text-align: center; padding-top: 5px;}
 .viki-img-center { display: block; margin: 0 auto; }
 .viki-img-caption {
     min-width: 20%; max-width: 80%;
