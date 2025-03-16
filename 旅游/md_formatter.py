@@ -1,3 +1,5 @@
+# 在需要处理的目录中运行：python md_formatter.py
+
 import os
 import re
 
