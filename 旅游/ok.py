@@ -109,6 +109,7 @@ def apply_all_rules(line: str, skip_trailing: bool = False) -> str:
     line = rule11_heading_spaces(line)
     if not skip_trailing:
         line = rule12_trailing_spaces(line)
+    line = rule13_convert_punctuation(line)
     return line
 
 def final_quote_cleanup(line: str) -> str:
@@ -141,19 +142,6 @@ def rule3_remove_spaces(line: str) -> str:
     while '  ' in line:
         line = line.replace('  ', ' ')
 
-    # 处理行首格式
-    if line.lstrip().startswith('-'):
-        # 特殊情况：行首的"-"处理
-        line = line.lstrip()  # 先删除所有行首空格
-        if not line.startswith('　-'):  # 如果没有全角空格
-            line = '　' + line  # 添加全角空格
-        line = line.replace('-', '–', 1)  # 替换第一个"-"为"–"
-        if len(line) > 1 and not line[2:3].isspace():  # 如果后面没有空格
-            line = line[:2] + ' ' + line[2:]  # 添加半角空格
-    else:
-        # 普通情况：直接删除行首空格
-        line = line.lstrip()
-
     # 删除指定标点前的空格
     punct_before = '#*<-—!&：:。.；;，,？?！)）》>”"《、（(“'
     line = re.sub(r'([\s　]+)([' + re.escape(punct_before) + r'])', r'\2', line)
@@ -161,6 +149,19 @@ def rule3_remove_spaces(line: str) -> str:
     # 删除指定标点后面的空格
     punct_after = '-—。.”:：（(《<“'
     line = re.sub(r'([' + re.escape(punct_after) + r'])([\s　]+)', r'\1', line)
+
+    # 处理行首格式
+    if line.lstrip().startswith('-') or line.lstrip().startswith('–'):
+        # 特殊情况：行首的"-"处理
+        line = line.lstrip()  # 先删除所有行首空格
+        if not line.startswith('　-') or line.startswith('　–'):  # 如果没有全角空格
+            line = '　' + line  # 添加全角空格
+        line = line.replace('-', '–', 1)  # 替换第一个"-"为"–"
+        if len(line) > 1 and not line[2:3].isspace():  # 如果后面没有空格
+            line = line[:2] + ' ' + line[2:]  # 添加半角空格
+    else:
+        # 普通情况：直接删除行首空格
+        line = line.lstrip()
     
     # 删除开引号后（“、‘）紧跟中文前的空格
     line = re.sub(r'([“‘])\s+(?=[\u4e00-\u9fff])', r'\1', line)
@@ -189,10 +190,6 @@ def rule3_remove_spaces(line: str) -> str:
     # 处理 "*" 后面与 "【" 之间的空格，以及 "*" 后与字符之间的空格
     line = re.sub(r'\*[\s　]+【', '* 【', line)
     line = re.sub(r'\*[\s　]+([A-Za-z0-9\u4e00-\u9fff])', r'*\1', line)
-
-    # 处理竖线（排除表格行后）
-    if not (line.strip().startswith('|') and '|' in line[1:]):  # 二次确认非表格行
-        line = re.sub(r'\s*\|\s*', '｜', line)
 
     return line
 
@@ -242,8 +239,7 @@ def rule6_chinese_punctuation(line: str) -> str:
     line = ''.join(punct_map.get(ch, ch) for ch in line)
 
     # 重复的逗号或句号只保留一个
-    line = re.sub(r'，{2,}', '，', line)
-    line = re.sub(r'。{2,}', '。', line)
+    line = re.sub(r'([，。：])\1+', r'\1', line)
 
     # 中文字符之间的连接符统一为—（两边无空格）
     line = re.sub(r'([\u4e00-\u9fff])[-－—]+([\u4e00-\u9fff])', r'\1—\2', line)
@@ -285,7 +281,8 @@ def rule6_chinese_punctuation(line: str) -> str:
 
     # 新增规则4：把”“替换成”、“
     line = re.sub(r'”“', '”、“', line)
-    
+    line = re.sub(r"GDP:", "GDP：", line)
+
     return line
 
 def rule7_time_format(line: str) -> str:
@@ -334,6 +331,34 @@ def rule12_trailing_spaces(line: str) -> str:
     line = line.rstrip('\n')
     if line:
         line = line.rstrip() + '  \n'
+    return line
+
+def rule13_convert_punctuation(line: str) -> str:
+    def replace_specific_punctuation(match):
+        # 仅对前后的标点进行替换
+        parts = []
+        for i in range(1, len(match.groups()) + 1):
+            part = match.group(i)
+            if part and part in PUNCT_HALF_TO_FULL:
+                parts.append(PUNCT_HALF_TO_FULL[part])
+            else:
+                parts.append(part)
+        return ''.join(parts)
+
+    # 替换电话号码前后的标点
+    line = re.sub(r'([,.;]?)(0\d{2,3}–\d{7,8})([,.;]?)', replace_specific_punctuation, line)
+    # 替换手机号码前后的标点
+    line = re.sub(r'([,.;]?)(1\d{10})([,.;]?)', replace_specific_punctuation, line)
+    # 替换时间前后的标点
+    line = re.sub(r'([,.;]?)(\d{2}:\d{2})([,.;]?)', replace_specific_punctuation, line)
+
+    # 统计 | 的数量
+    pipe_count = line.count('|')
+    if pipe_count == 1:
+        line = re.sub(r'\s*\|\s*', '｜', line)
+    elif pipe_count > 1:
+        # 处理多于一条 | 的行，把 |+数字。 改成 |+数字.
+        line = re.sub(r'(\| *)(\d+)。', r'\1\2.', line)
     return line
 
 def process_consecutive_empty_lines(lines: List[str]) -> List[str]:
@@ -392,6 +417,9 @@ def process_punctuation_in_brackets(line: str) -> str:
             return f"{left}{content}{right}"
         line = pattern.sub(replacer, line)
     return line
+
+
+
 
 # ---------------- 主入口 ----------------
 
