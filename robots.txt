@@ -30,3 +30,6 @@ User-agent: spbot
 Disallow: /
 User-agent: YandexBot
 Disallow: /
+
+User-agent: *
+Disallow: /something/
