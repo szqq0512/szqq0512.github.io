@@ -546,9 +546,10 @@
 
         // 加载目录数据
         async function loadVxJson(folderPath) {
+            // 保持 folderPath 为相对路径，不带“旅游/”前缀
             const normPath = cleanPath(folderPath || '');
             if (cache.dirCache[normPath]) return cache.dirCache[normPath];
-            // 路径前加“旅游/”前缀
+            // 路径前加“旅游/”前缀（只加一次）
             const url = normPath ? `旅游/${normPath}/vx.json` : '旅游/vx.json';
             try {
                 const response = await fetch(url);
@@ -633,6 +634,7 @@
         }
 
         function createFolderElement(folder, parentPath) {
+            // 保持 parentPath 为相对路径
             const folderPath = parentPath ? `${parentPath}/${folder.name}` : folder.name;
             const folderContainer = document.createElement('div');
             
@@ -652,6 +654,7 @@
         }
 
         function createFileElement(file, parentPath) {
+            // 保持 parentPath 为相对路径
             const fileContainer = document.createElement('div');
             const fileElem = document.createElement('div');
             fileElem.className = 'file';
@@ -741,17 +744,17 @@
                 if (emojiSpan) emojiSpan.textContent = '📂';
                 
                 if (childrenContainer.children.length === 0) {
+                    // 修正：只传递相对路径，不加多余前缀
+                    const subFolderData = await loadVxJson(folderElem.dataset.path);
+                    childrenContainer.innerHTML = '';
                     
-                        const subFolderData = await loadVxJson(folderElem.dataset.path);
-                        childrenContainer.innerHTML = '';
-                        
-                        subFolderData.folders.forEach(subFolder => {
-                            childrenContainer.appendChild(createFolderElement(subFolder, folderElem.dataset.path));
-                        });
-                        
-                        subFolderData.files.forEach(file => {
-                            childrenContainer.appendChild(createFileElement(file, folderElem.dataset.path));
-                        });
+                    subFolderData.folders.forEach(subFolder => {
+                        childrenContainer.appendChild(createFolderElement(subFolder, folderElem.dataset.path));
+                    });
+                    
+                    subFolderData.files.forEach(file => {
+                        childrenContainer.appendChild(createFileElement(file, folderElem.dataset.path));
+                    });
                 }
                 
                 childrenContainer.style.display = 'block';
@@ -786,7 +789,7 @@
 
         // Markdown内容处理
         async function fetchMarkdownFile(filePath) {
-            // 路径前加“旅游/”前缀
+            // filePath 为相对路径
             const fullPath = `旅游/${filePath}`;
             if (cache.mdContent[fullPath]) return cache.mdContent[fullPath];
             const response = await fetch(fullPath);
