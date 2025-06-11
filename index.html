@@ -319,11 +319,8 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(108, 92, 231, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            /* animation: spin 1s ease-in-out infinite; */
-            margin-right: 10px;
+            margin: 0 auto;
+            text-align: center;
         }
         
         .children {
@@ -335,7 +332,7 @@
         }
         
         .tree-view .children {
-            border-left: 1px dashed #ccc;
+            border-left: none;
             margin-left: 10px;
         }
         
@@ -344,6 +341,13 @@
             margin-left: 10px;
         }
         
+        /* markdown图片自适应容器宽度 */
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1em auto;
+        }
         
         @media (max-width: 992px) {
             .top-nav {
@@ -484,8 +488,10 @@
         <main class="content" id="content">
             <div class="empty-state">
                 <h2>欢迎使用青青小竹网</h2>
+                 <p>一个简单的使用Markdown语法的个人笔记。</p>  
+                 <p>从网上搜集整理的旅游相关资料，主要罗列了中国各地的概况、景点及特色村寨等，方便查找和出行规划。</p>
                  <p>请选择要查看的文件</p>
-               <img src="https://hub.gitmirror.com/raw.githubusercontent.com/szqq0512/Pic/main/img/202202112050167.webp" 
+               <img src="https://i.postimg.cc/VkcvKvLY/202202112050167.webp" 
                      alt="Welcome Image" 
                      class="welcome-image" 
                      loading="lazy">
@@ -600,7 +606,7 @@
         async function loadFolder(folderPath) {
             cache.currentFolderPath = folderPath;
             $.sidebarTitle.textContent = folderPath.split('/').pop() || folderPath;
-            $.treeView.innerHTML = `<div class="loading-state"><div class="loader"></div><p>正在加载目录内容...</p></div>`;
+            $.treeView.innerHTML = `<div class="loader"></div>`;
             
             const folderData = await loadVxJson(folderPath);
             generateTreeView(folderData, folderPath);
