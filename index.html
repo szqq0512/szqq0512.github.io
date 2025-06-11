@@ -1,31 +1,900 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="QQXZ.COM,青青小竹,旅游,旅行,景点,国保,风景,城市介绍,乡村介绍,中文旅行网站,旅行参考,旅游指南"/>
-    <meta name="descipion" content="QQXZ.COM,青青小竹,青青小竹网,个人旅游资料收集,旅游资源"/>
+    <meta name="description" content="QQXZ.COM,青青小竹,青青小竹网,个人旅游资料收集,旅游资源"/>
+    <title>青青小竹网 | 旅游百科 | 各地景点</title>
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/marked/4.0.2/marked.min.js"></script>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #fd79a8;
+            --accent: #00cec9;
+            --light: #f7f7ff;
+            --dark: #2d3436;
+            --sidebar-bg: #fff;
+            --content-bg: #f9f9f9;
+            --card-bg: #fff;
+            --border: #e0e0e0;
+            --text: #3d3d3d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--content-bg);
+            color: var(--text);
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -moz-user-select: none;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #5d4ae0 100%);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+        }
 
-    <title>青青小竹网_旅游百科_各地景点</title>
+        hr {
+            margin: -0.5rem 0; 
+        }
+        
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 3840px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            padding-left: 20px;
+        }
+        
+        nav li {
+            margin: 3px 0;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            font-size: 0.95rem;
+            display: block;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jstree/3.3.12/themes/default/style.min.css">
-    <link rel="stylesheet" href="css/viki.css">
-    <link rel="stylesheet" href="css/custom.css">
+            .sidebar-header .toggle-btn {
+                display: none;
+            }
+        
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            width: 90%;
+            max-width: 3840px;
+            margin: 10px auto;
+            padding: 0 10px;
+            gap: 15px;
+            /* 移除max-width: 1400px;，改为响应式宽度 */
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: var(--sidebar-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #5d4ae0 100%);
+            color: white;
+            cursor: pointer;
+        }
+        
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        .tree-view {
+            padding: 10px 0;
+            flex: 1;
+            overflow-y: auto;
+            background: var(--sidebar-bg);
+        }
+        
+        .folder, .file, .heading-item {
+            padding: 6px 10px 6px 1em;
+            margin: 2px 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 28px;
+            white-space: nowrap;
+            overflow: hidden;
+            background: var(--light);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script>
-    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/mermaid/8.5.2/mermaid.min.js"></script>
-    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/jstree/3.3.12/jstree.min.js"></script>
+        .heading-item {
+            padding-left: 2em; /* 原本1em，现多移一个字符宽度 */
+        }
+        
+        .folder:hover, .file:hover, .heading-item:hover {
+            background: #e0ebff;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--content-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .markdown-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2em;
+            background: var(--card-bg);
+        }
+        
+        .markdown-content {
+            line-height: 1.7;
+            color: var(--text);
+            font-size: 1.05rem;
+            text-align: left;
+        }
 
-    <!-- viki script -->
-    <script src="js/viki.js"></script>
+        .markdown-content > p { 
+            margin: 1em 0;
+        }
+        
+        .markdown-content a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+        
+        .markdown-content a:hover {
+            color: var(--accent);
+        }
+        
+        .markdown-content h1 { 
+            color: var(--primary);
+            font-size: 2rem;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .markdown-content h2 {
+            color: var(--accent);
+            font-size: 1.7rem;
+            margin: 25px 0 15px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .markdown-content h3 {
+            color: var(--secondary);
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        
+        /* 列表样式 - 更新 */
 
+        .markdown-content ul {
+            list-style: none;
+        }
+        
+        .markdown-content ul > li {
+            position: relative;
+            padding: 0.25em 0.5em;
+        }
+        
+        .markdown-content ul > li:nth-child(even) {
+            background-color: #f0f5ff;
+        }
+        
+      
+        /* 引用块样式 - 更新 */
+        .markdown-content blockquote {
+            font-size: 0.92em;
+            font-style: italic;
+            color: #008080;
+            margin-left: 0.5em;
+            border-left: 0.12em solid #008080;
+            padding: 0 1em;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* 强调文本样式 - 更新 */
+        .markdown-content em {
+            color: #346c91;
+            font-style: normal;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .empty-state h2 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.6rem;
+        }
+        
+        .welcome-image {
+            max-width: 80%;
+            border-radius: 10px;
+            margin-top: 20px;
+            opacity: 1; /* 直接显示 */
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(108, 92, 231, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            /* animation: spin 1s ease-in-out infinite; */
+            margin-right: 10px;
+        }
+        
+        .children {
+            display: none;
+        }
+        
+        .folder.expanded + .children {
+            display: block;
+        }
+        
+        .tree-view .children {
+            border-left: 1px dashed #ccc;
+            margin-left: 10px;
+        }
+        
+        .tree-view .children .folder,
+        .tree-view .children .file {
+            margin-left: 10px;
+        }
+        
+        
+        @media (max-width: 992px) {
+            .top-nav {
+                width: 100%;
+        }
 
+            .container {
+                width: 100%;
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+                gap: 0;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                max-height: 40vh;
+                box-shadow: none;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .sidebar.collapsed {
+                overflow: hidden;
+            }
+            
+            .sidebar.collapsed .tree-view {
+                display: none;
+            }
+            
+            .sidebar-header .toggle-btn {
+                display: block;
+            }
+            
+            .content {
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+        .markdown-container {
+            padding: 0.8em;
+        }
+            
+            nav ul {
+                gap: 8px;
+                justify-content: center;
+                padding-left: 0;
+            }
+            
+            nav li {
+                flex: 1 0 45%;
+                text-align: center;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+            
+            nav {
+                display: none;
+                width: 100%;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            .top-nav {
+                flex-direction: column;
+            }
+            
+            .logo-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+        }
+        
+        .toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 10px;
+        }
+        
+        .toggle-btn .emoji-icon {
+            font-size: 1.6em;
+            color: #fff;
+        }
+        
+        .heading-item.h1 .emoji-icon {
+            color: var(--primary);
+        }
+        
+        .heading-item.h2 .emoji-icon {
+            color: var(--accent);
+        }
+        
+        .heading-item.h3 .emoji-icon {
+            color: var(--secondary);
+        }
+
+    </style>
 </head>
 <body>
+    <header>
+        <div class="top-nav">
+            <div class="logo-container">
+                <div class="logo">
+                    <span class="emoji-icon" aria-label="logo">📖</span>
+                    <a href="index.html"><span>青青小竹网</span></a>
+                </div>
+                <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="展开菜单">
+                    <span class="emoji-icon" aria-label="菜单">☰</span>
+                </button>
+            </div>
+            <nav id="top-nav">
+                <ul id="nav-menu">
+                    <!-- 导航菜单将通过JS动态生成 -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header" id="sidebar-header">
+                <h2>
+                  <span class="emoji-icon" aria-label="文件夹">📁</span>
+                  <span id="sidebar-title"></span>
+                </h2>
+                <button class="toggle-btn" id="toggle-sidebar" data-collapsed="false"><span class="emoji-icon" aria-label="下拉">▽</span></button>
+            </div>
+            <div class="tree-view" id="tree-view"></div>
+        </aside>
+        
+        <main class="content" id="content">
+            <div class="empty-state">
+                <h2>欢迎使用青青小竹网</h2>
+                 <p>请选择要查看的文件</p>
+               <img src="https://hub.gitmirror.com/raw.githubusercontent.com/szqq0512/Pic/main/img/202202112050167.webp" 
+                     alt="Welcome Image" 
+                     class="welcome-image" 
+                     loading="lazy">
+            </div>
+        </main>
+    </div>
 
+    <script>
+    (function () {
+        // 缓存DOM元素
+        const $ = {
+            navMenu: document.getElementById('nav-menu'),
+            treeView: document.getElementById('tree-view'),
+            sidebar: document.getElementById('sidebar'),
+            sidebarHeader: document.getElementById('sidebar-header'),
+            sidebarTitle: document.getElementById('sidebar-title'),
+            content: document.getElementById('content'),
+            toggleSidebar: document.getElementById('toggle-sidebar'),
+            mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
+            topNav: document.getElementById('top-nav')
+        };
+        
+        // 缓存与状态
+        const cache = {
+            dirCache: {},
+            mdContent: {},
+            headings: {},
+            markedLoaded: false,
+            topLevelFolders: [],
+            currentFolderPath: '',
+            currentFileElement: null,
+            initialContentHTML: '',
+            headingIdMap: {}
+        };
+
+        // 工具函数
+        const cleanPath = path => path ? path.replace(/\\/g, '/').trim() : '';
+
+        // 加载marked
+        function checkMarkedLoaded() {
+            return new Promise((resolve) => {
+                if (window.marked) {
+                    cache.markedLoaded = true;
+                    resolve();
+                    return;
+                }
+                
+                const checkInterval = setInterval(() => {
+                    if (window.marked) {
+                        clearInterval(checkInterval);
+                        cache.markedLoaded = true;
+                        resolve();
+                    }
+                }, 100);
+            });
+        }
+
+
+        // 加载目录数据
+        async function loadVxJson(folderPath) {
+            const normPath = cleanPath(folderPath || '');
+            if (cache.dirCache[normPath]) return cache.dirCache[normPath];
+            const url = normPath ? `${normPath}/vx.json` : 'vx.json';
+            try {
+                const response = await fetch(url);
+                if (!response.ok) return { folders: [], files: [] };
+                const data = await response.json();
+                cache.dirCache[normPath] = data;
+                return data;
+            } catch (e) {
+                return { folders: [], files: [] };
+            }
+        }
+
+        // 加载根目录
+        async function loadRootDirectory() {
+            const rootData = await loadVxJson('');
+            cache.topLevelFolders = rootData.folders || [];
+            if (cache.topLevelFolders.length > 0) {
+                generateNavMenu(cache.topLevelFolders);
+                const firstFolder = cache.topLevelFolders[0];
+                cache.currentFolderPath = firstFolder.name;
+                await loadFolder(cache.currentFolderPath);
+            }
+        }
+
+        // 顶部导航
+        function generateNavMenu(folders) {
+            $.navMenu.innerHTML = '';
+            
+            folders.forEach(folder => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = folder.name;
+                a.dataset.path = folder.name;
+                li.appendChild(a);
+                $.navMenu.appendChild(li);
+            });
+        }
+
+        function updateNavActiveState(folderPath) {
+            const folderName = folderPath.split('/')[0];
+            document.querySelectorAll('#nav-menu a').forEach(a => {
+                a.classList.toggle('active', a.dataset.path === folderName);
+            });
+        }
+
+        // 加载文件夹内容
+        async function loadFolder(folderPath) {
+            cache.currentFolderPath = folderPath;
+            $.sidebarTitle.textContent = folderPath.split('/').pop() || folderPath;
+            $.treeView.innerHTML = `<div class="loading-state"><div class="loader"></div><p>正在加载目录内容...</p></div>`;
+            
+            const folderData = await loadVxJson(folderPath);
+            generateTreeView(folderData, folderPath);
+            updateNavActiveState(folderPath);
+            $.content.innerHTML = cache.initialContentHTML;
+
+            // 新增：窄屏下切换顶级目录时，自动展开侧栏和树形菜单
+            if (window.innerWidth <= 992 && $.sidebar.classList.contains('collapsed')) {
+                $.sidebar.classList.remove('collapsed');
+                $.toggleSidebar.setAttribute('data-collapsed', 'false');
+                const icon = $.toggleSidebar.querySelector('.emoji-icon');
+                if (icon) icon.textContent = '▽';
+            }
+        }
+
+        // 树形菜单
+        function generateTreeView(folderData, parentPath) {
+
+            $.treeView.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            
+            folderData.folders.forEach(folder => {
+                frag.appendChild(createFolderElement(folder, parentPath));
+            });
+            
+            folderData.files.forEach(file => {
+                frag.appendChild(createFileElement(file, parentPath));
+            });
+            
+            $.treeView.appendChild(frag);
+        }
+
+        function createFolderElement(folder, parentPath) {
+            const folderPath = parentPath ? `${parentPath}/${folder.name}` : folder.name;
+            const folderContainer = document.createElement('div');
+            
+            const folderElem = document.createElement('div');
+            folderElem.className = 'folder';
+            folderElem.innerHTML = '<span class="emoji-icon" aria-label="文件夹">📁</span>' + folder.name;
+            folderElem.dataset.path = folderPath;
+            folderElem.title = folder.name;
+            
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = 'children';
+            
+            folderContainer.appendChild(folderElem);
+            folderContainer.appendChild(childrenContainer);
+            
+            return folderContainer;
+        }
+
+        function createFileElement(file, parentPath) {
+            const fileContainer = document.createElement('div');
+            const fileElem = document.createElement('div');
+            fileElem.className = 'file';
+            
+            const displayName = file.name.endsWith('.md') ? 
+                file.name.slice(0, -3) : file.name;
+                
+            fileElem.innerHTML = '<span class="emoji-icon" aria-label="文件">📄</span>' + displayName;
+            fileElem.dataset.path = parentPath ? `${parentPath}/${file.name}` : file.name;
+            // 悬停提示去掉.md后缀
+            fileElem.title = displayName;
+            
+            const headingsContainer = document.createElement('div');
+            headingsContainer.className = 'children';
+            headingsContainer.style.display = 'none';
+            
+            fileContainer.appendChild(fileElem);
+            fileContainer.appendChild(headingsContainer);
+            
+            return fileContainer;
+        }
+
+        // 事件处理
+        function setupEventListeners() {
+            // 顶部导航
+            $.navMenu.addEventListener('click', async e => {
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                    const folderPath = e.target.dataset.path;
+                    await loadFolder(folderPath);
+                    
+                    if (window.innerWidth <= 992) {
+                        $.topNav.classList.remove('active');
+                    }
+                    
+                    $.content.innerHTML = cache.initialContentHTML;
+                }
+            });
+            
+            // 树形菜单
+            $.treeView.addEventListener('click', async e => {
+                const folderElem = e.target.closest('.folder');
+                const fileElem = e.target.closest('.file');
+                
+                if (folderElem) {
+                    handleFolderClick(folderElem);
+                } else if (fileElem) {
+                    handleFileClick(fileElem);
+                }
+            });
+            
+            // 侧边栏折叠
+            $.sidebarHeader.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    $.sidebar.classList.toggle('collapsed');
+                    const icon = $.toggleSidebar.querySelector('.emoji-icon');
+                    const collapsed = $.sidebar.classList.contains('collapsed');
+                    $.toggleSidebar.setAttribute('data-collapsed', collapsed);
+                    icon.textContent = collapsed ? '△' : '▽';
+                }
+            });
+            
+            // 移动端菜单
+            $.mobileMenuToggle.addEventListener('click', function () {
+                $.topNav.classList.toggle('active');
+            });
+        }
+
+        async function handleFolderClick(folderElem) {
+            // 收起所有子目录
+            const childrenContainer = folderElem.parentElement.querySelector('.children');
+            if (childrenContainer) {
+                childrenContainer.querySelectorAll('.folder.expanded').forEach(subFolder => {
+                    subFolder.classList.remove('expanded');
+                    const subEmoji = subFolder.querySelector('.emoji-icon');
+                    if (subEmoji) subEmoji.textContent = '📁';
+                });
+                childrenContainer.querySelectorAll('.children').forEach(subChildren => {
+                    subChildren.style.display = 'none';
+                });
+            }
+            
+            folderElem.classList.toggle('expanded');
+            const emojiSpan = folderElem.querySelector('.emoji-icon');
+            
+            if (folderElem.classList.contains('expanded')) {
+                if (emojiSpan) emojiSpan.textContent = '📂';
+                
+                if (childrenContainer.children.length === 0) {
+                    
+                        const subFolderData = await loadVxJson(folderElem.dataset.path);
+                        childrenContainer.innerHTML = '';
+                        
+                        subFolderData.folders.forEach(subFolder => {
+                            childrenContainer.appendChild(createFolderElement(subFolder, folderElem.dataset.path));
+                        });
+                        
+                        subFolderData.files.forEach(file => {
+                            childrenContainer.appendChild(createFileElement(file, folderElem.dataset.path));
+                        });
+                }
+                
+                childrenContainer.style.display = 'block';
+            } else {
+                if (emojiSpan) emojiSpan.textContent = '📁';
+                if (childrenContainer) childrenContainer.style.display = 'none';
+            }
+        }
+
+        async function handleFileClick(fileElem) {
+            const headingsContainer = fileElem.parentElement.querySelector('.children');
+            
+            if (cache.currentFileElement === fileElem) {
+                const isOpen = headingsContainer.style.display === 'block';
+                headingsContainer.style.display = isOpen ? 'none' : 'block';
+                fileElem.classList.toggle('expanded', !isOpen);
+                return;
+            }
+            
+            if (cache.currentFileElement) {
+                const prevHeadingsContainer = cache.currentFileElement.parentElement.querySelector('.children');
+                if (prevHeadingsContainer) prevHeadingsContainer.style.display = 'none';
+                cache.currentFileElement.classList.remove('expanded', 'active');
+            }
+            
+            cache.currentFileElement = fileElem;
+            document.querySelectorAll('.file, .folder').forEach(el => el.classList.remove('active'));
+            fileElem.classList.add('active', 'expanded');
+            
+            await displayMarkdownContent(fileElem.dataset.path, headingsContainer);
+        }
+
+        // Markdown内容处理
+        async function fetchMarkdownFile(filePath) {
+            if (cache.mdContent[filePath]) return cache.mdContent[filePath];
+            const response = await fetch(filePath);
+            if (!response.ok) return '';
+            const text = await response.text();
+            cache.mdContent[filePath] = text;
+            return text;
+        }
+
+        function parseHeadings(content) {
+            if (cache.headings[content]) return cache.headings[content];
+            
+            const headings = [];
+            const tokens = window.marked.lexer(content);
+            
+            tokens.forEach(token => {
+                if (token.type === 'heading' && token.depth >= 1 && token.depth <= 3) {
+                    headings.push({ level: token.depth, text: token.text });
+                }
+            });
+            
+            cache.headings[content] = headings;
+            return headings;
+        }
+
+        async function displayMarkdownContent(filePath, headingsContainer) {
+
+                await checkMarkedLoaded();
+                const content = await fetchMarkdownFile(filePath);
+                const headings = parseHeadings(content);
+                
+                const container = document.createElement('div');
+                container.className = 'markdown-container';
+                
+                const contentArea = document.createElement('div');
+                contentArea.className = 'markdown-content';
+                
+                // 自定义渲染器添加标题ID
+                const renderer = new window.marked.Renderer();
+                let headingId = 0;
+                
+                renderer.heading = (text, level) => {
+                    const id = `heading-${level}-${headingId++}`;
+                    return `<h${level} id="${id}">${text}</h${level}>`;
+                };
+                
+                contentArea.innerHTML = window.marked.parse(content, { renderer });
+                container.appendChild(contentArea);
+                
+                generateHeadingsTree(headings, headingsContainer);
+                $.content.innerHTML = '';
+                $.content.appendChild(container);
+        }
+
+        function generateHeadingsTree(headings, container) {
+            container.innerHTML = '';
+            container.style.display = 'block';
+            
+            const frag = document.createDocumentFragment();
+            
+            headings.forEach(heading => {
+                const headingItem = document.createElement('div');
+                headingItem.className = `heading-item h${heading.level}`;
+                
+                // 根据标题级别设置不同的图标
+                let icon = '';
+                if (heading.level === 1) {
+                    icon = '›&nbsp;';
+                } else if (heading.level === 2) {
+                    icon = '»&nbsp;';
+                } else if (heading.level === 3) {
+                    icon = '»›&nbsp;';
+                }
+                
+                headingItem.innerHTML = `<span class="emoji-icon">${icon}</span><span>${heading.text}</span>`;
+                
+                headingItem.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scrollToHeading(heading.text, heading.level);
+                });
+                
+                frag.appendChild(headingItem);
+            });
+            
+            container.appendChild(frag);
+        }
+
+        function scrollToHeading(text, level) {
+            const headings = document.querySelectorAll(`h${level}`);
+            const target = Array.from(headings).find(h => h.textContent === text);
+            
+            if (target) {
+                const container = document.querySelector('.markdown-container');
+                const containerRect = container.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                const scrollTop = container.scrollTop;
+                const offset = targetRect.top - containerRect.top + scrollTop - 12;
+                
+                container.scrollTo({ top: offset, behavior: 'smooth' });
+            }
+        }
+
+        // 初始化
+        async function init() {
+            cache.initialContentHTML = $.content.innerHTML;
+                await loadRootDirectory();
+                setupEventListeners();
+        }
+
+        init();
+    })();
+    </script>
 </body>
 </html>
