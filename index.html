@@ -548,7 +548,8 @@
         async function loadVxJson(folderPath) {
             const normPath = cleanPath(folderPath || '');
             if (cache.dirCache[normPath]) return cache.dirCache[normPath];
-            const url = normPath ? `${normPath}/vx.json` : 'vx.json';
+            // 路径前加“旅游/”前缀
+            const url = normPath ? `旅游/${normPath}/vx.json` : '旅游/vx.json';
             try {
                 const response = await fetch(url);
                 if (!response.ok) return { folders: [], files: [] };
@@ -785,11 +786,13 @@
 
         // Markdown内容处理
         async function fetchMarkdownFile(filePath) {
-            if (cache.mdContent[filePath]) return cache.mdContent[filePath];
-            const response = await fetch(filePath);
+            // 路径前加“旅游/”前缀
+            const fullPath = `旅游/${filePath}`;
+            if (cache.mdContent[fullPath]) return cache.mdContent[fullPath];
+            const response = await fetch(fullPath);
             if (!response.ok) return '';
             const text = await response.text();
-            cache.mdContent[filePath] = text;
+            cache.mdContent[fullPath] = text;
             return text;
         }
 
