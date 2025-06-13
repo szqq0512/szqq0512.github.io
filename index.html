@@ -212,8 +212,10 @@
             overflow-y: auto;
             padding: 2em;
             background: var(--card-bg);
+            /* 适配移动端底部安全区，防止内容被导航条遮挡 */
+            padding-bottom: max(2em, 12vh, env(safe-area-inset-bottom, 32px));
         }
-        
+
         .markdown-content {
             line-height: 1.7;
             color: var(--text);
@@ -352,7 +354,7 @@
         @media (max-width: 992px) {
             .top-nav {
                 width: 100%;
-        }
+            }
 
             .container {
                 width: 100%;
@@ -387,10 +389,11 @@
                 box-shadow: none;
             }
 
-        .markdown-container {
-            padding: 0.8em;
-        }
-            
+            .markdown-container {
+                padding: 0.8em;
+                padding-bottom: 18vh !important; /* 兼容 Edge 浏览器底部遮挡问题 */
+            }
+
             nav ul {
                 gap: 8px;
                 justify-content: center;
@@ -488,14 +491,13 @@
         <main class="content" id="content">
             <div class="empty-state">
                 <h2>欢迎使用青青小竹网</h2>
-                <p></p>
-                <p>一个简单的使用Markdown语法的个人笔记。</p>  
-                <p></p>
-                <p>从网上搜集整理的旅游相关资料，主要罗列了中国各地的概况、景点及特色村寨等，方便查找和出行规划。</p>
-                <p></p>
-                <p>请选择要查看的文件</p>
-                <p></p>
-               <img src="https://i.postimg.cc/VkcvKvLY/202202112050167.webp" 
+		<br>
+                 <p>一个简单的使用Markdown语法的个人笔记。</p>  
+		<br>
+                 <p>从网上搜集整理的旅游相关资料，主要罗列了中国各地的概况、景点及特色村寨等，方便查找和出行规划。</p>
+		<br>
+                 <p>请选择要查看的文件</p>
+               <img src="https://s1.imagehub.cc/images/2025/06/13/bf3432b185d01be77f7f9f78f3a79dd7.webp" 
                      alt="Welcome Image" 
                      class="welcome-image" 
                      loading="lazy">
@@ -505,7 +507,6 @@
 
     <script>
     (function () {
-        // 缓存DOM元素
         const $ = {
             navMenu: document.getElementById('nav-menu'),
             treeView: document.getElementById('tree-view'),
@@ -517,399 +518,128 @@
             mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
             topNav: document.getElementById('top-nav')
         };
-        
-        // 缓存与状态
-        const cache = {
-            dirCache: {},
-            mdContent: {},
-            headings: {},
-            markedLoaded: false,
-            topLevelFolders: [],
-            currentFolderPath: '',
-            currentFileElement: null,
-            initialContentHTML: '',
-            headingIdMap: {}
-        };
-
-        // 工具函数
-        const cleanPath = path => path ? path.replace(/\\/g, '/').trim() : '';
-
-        // 加载marked
-        function checkMarkedLoaded() {
-            return new Promise((resolve) => {
-                if (window.marked) {
-                    cache.markedLoaded = true;
-                    resolve();
-                    return;
-                }
-                
-                const checkInterval = setInterval(() => {
-                    if (window.marked) {
-                        clearInterval(checkInterval);
-                        cache.markedLoaded = true;
-                        resolve();
-                    }
-                }, 100);
-            });
-        }
-
-
-        // 加载目录数据
-        async function loadVxJson(folderPath) {
-            // 保持 folderPath 为相对路径，不带“旅游/”前缀
-            const normPath = cleanPath(folderPath || '');
-            if (cache.dirCache[normPath]) return cache.dirCache[normPath];
-            // 路径前加“旅游/”前缀（只加一次）
-            const url = normPath ? `旅游/${normPath}/vx.json` : '旅游/vx.json';
+        const cache = {dirCache:{}, mdContent:{}, headings:{}, markedLoaded:false, currentFile:null, initialContentHTML:''};
+        const cleanPath = p => p ? p.replace(/\\/g, '/').trim() : '';
+        async function loadVxJson(path) {
+            path = cleanPath(path||'');
+            if (cache.dirCache[path]) return cache.dirCache[path];
+            let url = path ? `旅游/${path}/vx.json` : '旅游/vx.json';
             try {
-                const response = await fetch(url);
-                if (!response.ok) return { folders: [], files: [] };
-                const data = await response.json();
-                cache.dirCache[normPath] = data;
-                return data;
-            } catch (e) {
-                return { folders: [], files: [] };
-            }
+                let r = await fetch(url);
+                if (!r.ok) return {folders:[],files:[]};
+                let d = await r.json();
+                cache.dirCache[path] = d; return d;
+            } catch { return {folders:[],files:[]}; }
         }
-
-        // 加载根目录
-        async function loadRootDirectory() {
-            const rootData = await loadVxJson('');
-            cache.topLevelFolders = rootData.folders || [];
-            if (cache.topLevelFolders.length > 0) {
-                generateNavMenu(cache.topLevelFolders);
-                const firstFolder = cache.topLevelFolders[0];
-                cache.currentFolderPath = firstFolder.name;
-                await loadFolder(cache.currentFolderPath);
-            }
-        }
-
-        // 顶部导航
-        function generateNavMenu(folders) {
-            $.navMenu.innerHTML = '';
-            
-            folders.forEach(folder => {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = '#';
-                a.textContent = folder.name;
-                a.dataset.path = folder.name;
-                li.appendChild(a);
-                $.navMenu.appendChild(li);
-            });
-        }
-
-        function updateNavActiveState(folderPath) {
-            const folderName = folderPath.split('/')[0];
-            document.querySelectorAll('#nav-menu a').forEach(a => {
-                a.classList.toggle('active', a.dataset.path === folderName);
-            });
-        }
-
-        // 加载文件夹内容
-        async function loadFolder(folderPath) {
-            cache.currentFolderPath = folderPath;
-            $.sidebarTitle.textContent = folderPath.split('/').pop() || folderPath;
-            $.treeView.innerHTML = `<div class="loader"></div>`;
-            
-            const folderData = await loadVxJson(folderPath);
-            generateTreeView(folderData, folderPath);
-            updateNavActiveState(folderPath);
-            $.content.innerHTML = cache.initialContentHTML;
-
-            // 新增：窄屏下切换顶级目录时，自动展开侧栏和树形菜单
-            if (window.innerWidth <= 992 && $.sidebar.classList.contains('collapsed')) {
-                $.sidebar.classList.remove('collapsed');
-                $.toggleSidebar.setAttribute('data-collapsed', 'false');
-                const icon = $.toggleSidebar.querySelector('.emoji-icon');
-                if (icon) icon.textContent = '▽';
-            }
-        }
-
-        // 树形菜单
-        function generateTreeView(folderData, parentPath) {
-
+        async function loadFolder(path) {
+            $.sidebarTitle.textContent = path.split('/').pop()||path;
+            $.treeView.innerHTML = '<div class="loader"></div>';
+            let d = await loadVxJson(path);
             $.treeView.innerHTML = '';
-            const frag = document.createDocumentFragment();
-            
-            folderData.folders.forEach(folder => {
-                frag.appendChild(createFolderElement(folder, parentPath));
-            });
-            
-            folderData.files.forEach(file => {
-                frag.appendChild(createFileElement(file, parentPath));
-            });
-            
-            $.treeView.appendChild(frag);
+            d.folders.forEach(f=>$.treeView.appendChild(folderElem(f, path)));
+            d.files.forEach(f=>$.treeView.appendChild(fileElem(f, path)));
+            updateNav(path); $.content.innerHTML = cache.initialContentHTML;
         }
-
-        function createFolderElement(folder, parentPath) {
-            // 保持 parentPath 为相对路径
-            const folderPath = parentPath ? `${parentPath}/${folder.name}` : folder.name;
-            const folderContainer = document.createElement('div');
-            
-            const folderElem = document.createElement('div');
-            folderElem.className = 'folder';
-            folderElem.innerHTML = '<span class="emoji-icon" aria-label="文件夹">📁</span>' + folder.name;
-            folderElem.dataset.path = folderPath;
-            folderElem.title = folder.name;
-            
-            const childrenContainer = document.createElement('div');
-            childrenContainer.className = 'children';
-            
-            folderContainer.appendChild(folderElem);
-            folderContainer.appendChild(childrenContainer);
-            
-            return folderContainer;
+        function folderElem(f, p) {
+            let c = document.createElement('div'), e = document.createElement('div');
+            e.className = 'folder'; e.innerHTML = '<span class="emoji-icon">📁</span>'+f.name;
+            e.dataset.path = p?p+'/'+f.name:f.name; e.title = f.name;
+            let ch = document.createElement('div'); ch.className = 'children';
+            c.appendChild(e); c.appendChild(ch); return c;
         }
-
-        function createFileElement(file, parentPath) {
-            // 保持 parentPath 为相对路径
-            const fileContainer = document.createElement('div');
-            const fileElem = document.createElement('div');
-            fileElem.className = 'file';
-            
-            const displayName = file.name.endsWith('.md') ? 
-                file.name.slice(0, -3) : file.name;
-                
-            fileElem.innerHTML = '<span class="emoji-icon" aria-label="文件">📄</span>' + displayName;
-            fileElem.dataset.path = parentPath ? `${parentPath}/${file.name}` : file.name;
-            // 悬停提示去掉.md后缀
-            fileElem.title = displayName;
-            
-            const headingsContainer = document.createElement('div');
-            headingsContainer.className = 'children';
-            headingsContainer.style.display = 'none';
-            
-            fileContainer.appendChild(fileElem);
-            fileContainer.appendChild(headingsContainer);
-            
-            return fileContainer;
+        function fileElem(f, p) {
+            let c = document.createElement('div'), e = document.createElement('div');
+            e.className = 'file';
+            let n = f.name.endsWith('.md')?f.name.slice(0,-3):f.name;
+            e.innerHTML = '<span class="emoji-icon">📄</span>'+n;
+            e.dataset.path = p?p+'/'+f.name:f.name; e.title = n;
+            let ch = document.createElement('div'); ch.className = 'children'; ch.style.display='none';
+            c.appendChild(e); c.appendChild(ch); return c;
         }
-
-        // 事件处理
-        function setupEventListeners() {
-            // 顶部导航
-            $.navMenu.addEventListener('click', async e => {
-                if (e.target.tagName === 'A') {
-                    e.preventDefault();
-                    const folderPath = e.target.dataset.path;
-                    await loadFolder(folderPath);
-                    
-                    if (window.innerWidth <= 992) {
-                        $.topNav.classList.remove('active');
-                    }
-                    
-                    $.content.innerHTML = cache.initialContentHTML;
-                }
-            });
-            
-            // 树形菜单
-            $.treeView.addEventListener('click', async e => {
-                const folderElem = e.target.closest('.folder');
-                const fileElem = e.target.closest('.file');
-                
-                if (folderElem) {
-                    handleFolderClick(folderElem);
-                } else if (fileElem) {
-                    handleFileClick(fileElem);
-                }
-            });
-            
-            // 侧边栏折叠
-            $.sidebarHeader.addEventListener('click', () => {
-                if (window.innerWidth <= 992) {
-                    $.sidebar.classList.toggle('collapsed');
-                    const icon = $.toggleSidebar.querySelector('.emoji-icon');
-                    const collapsed = $.sidebar.classList.contains('collapsed');
-                    $.toggleSidebar.setAttribute('data-collapsed', collapsed);
-                    icon.textContent = collapsed ? '△' : '▽';
-                }
-            });
-            
-            // 移动端菜单
-            $.mobileMenuToggle.addEventListener('click', function () {
-                $.topNav.classList.toggle('active');
+        function updateNav(path) {
+            let n = path.split('/')[0];
+            document.querySelectorAll('#nav-menu a').forEach(a=>a.classList.toggle('active',a.dataset.path===n));
+        }
+        async function fetchMd(filePath) {
+            let full = `旅游/${filePath}`;
+            if (cache.mdContent[full]) return cache.mdContent[full];
+            let r = await fetch(full); if (!r.ok) return '';
+            let t = await r.text(); cache.mdContent[full]=t; return t;
+        }
+        function parseHeadings(md) {
+            if (cache.headings[md]) return cache.headings[md];
+            let h=[], t=window.marked.lexer(md);
+            t.forEach(tok=>{if(tok.type==='heading'&&tok.depth<=3)h.push({level:tok.depth,text:tok.text})});
+            cache.headings[md]=h; return h;
+        }
+        async function showMd(filePath, headingsContainer) {
+            await checkMarkedLoaded();
+            let md = await fetchMd(filePath), h = parseHeadings(md);
+            let cont = document.createElement('div'); cont.className='markdown-container';
+            let area = document.createElement('div'); area.className='markdown-content';
+            let renderer = new window.marked.Renderer(), hid=0;
+            renderer.heading = (t,l)=>`<h${l} id="heading-${l}-${hid++}">${t}</h${l}>`;
+            area.innerHTML = window.marked.parse(md, {renderer});
+            cont.appendChild(area);
+            genHeadingsTree(h, headingsContainer);
+            $.content.innerHTML = ''; $.content.appendChild(cont);
+        }
+        function genHeadingsTree(h, c) {
+            c.innerHTML=''; c.style.display='block';
+            h.forEach(he=>{
+                let hi=document.createElement('div'); hi.className=`heading-item h${he.level}`;
+                let icon=he.level===1?'› ':he.level===2?'» ':he.level===3?'»› ':'';
+                hi.innerHTML=`<span class="emoji-icon">${icon}</span><span>${he.text}</span>`;
+                hi.onclick=e=>{e.stopPropagation();scrollToHeading(he.text,he.level)};
+                c.appendChild(hi);
             });
         }
-
-        async function handleFolderClick(folderElem) {
-            // 收起所有子目录
-            const childrenContainer = folderElem.parentElement.querySelector('.children');
-            if (childrenContainer) {
-                childrenContainer.querySelectorAll('.folder.expanded').forEach(subFolder => {
-                    subFolder.classList.remove('expanded');
-                    const subEmoji = subFolder.querySelector('.emoji-icon');
-                    if (subEmoji) subEmoji.textContent = '📁';
-                });
-                childrenContainer.querySelectorAll('.children').forEach(subChildren => {
-                    subChildren.style.display = 'none';
-                });
-            }
-            
-            folderElem.classList.toggle('expanded');
-            const emojiSpan = folderElem.querySelector('.emoji-icon');
-            
-            if (folderElem.classList.contains('expanded')) {
-                if (emojiSpan) emojiSpan.textContent = '📂';
-                
-                if (childrenContainer.children.length === 0) {
-                    // 修正：只传递相对路径，不加多余前缀
-                    const subFolderData = await loadVxJson(folderElem.dataset.path);
-                    childrenContainer.innerHTML = '';
-                    
-                    subFolderData.folders.forEach(subFolder => {
-                        childrenContainer.appendChild(createFolderElement(subFolder, folderElem.dataset.path));
-                    });
-                    
-                    subFolderData.files.forEach(file => {
-                        childrenContainer.appendChild(createFileElement(file, folderElem.dataset.path));
-                    });
-                }
-                
-                childrenContainer.style.display = 'block';
-            } else {
-                if (emojiSpan) emojiSpan.textContent = '📁';
-                if (childrenContainer) childrenContainer.style.display = 'none';
-            }
-        }
-
-        async function handleFileClick(fileElem) {
-            const headingsContainer = fileElem.parentElement.querySelector('.children');
-            
-            if (cache.currentFileElement === fileElem) {
-                const isOpen = headingsContainer.style.display === 'block';
-                headingsContainer.style.display = isOpen ? 'none' : 'block';
-                fileElem.classList.toggle('expanded', !isOpen);
-                return;
-            }
-            
-            if (cache.currentFileElement) {
-                const prevHeadingsContainer = cache.currentFileElement.parentElement.querySelector('.children');
-                if (prevHeadingsContainer) prevHeadingsContainer.style.display = 'none';
-                cache.currentFileElement.classList.remove('expanded', 'active');
-            }
-            
-            cache.currentFileElement = fileElem;
-            document.querySelectorAll('.file, .folder').forEach(el => el.classList.remove('active'));
-            fileElem.classList.add('active', 'expanded');
-            
-            await displayMarkdownContent(fileElem.dataset.path, headingsContainer);
-        }
-
-        // Markdown内容处理
-        async function fetchMarkdownFile(filePath) {
-            // filePath 为相对路径
-            const fullPath = `旅游/${filePath}`;
-            if (cache.mdContent[fullPath]) return cache.mdContent[fullPath];
-            const response = await fetch(fullPath);
-            if (!response.ok) return '';
-            const text = await response.text();
-            cache.mdContent[fullPath] = text;
-            return text;
-        }
-
-        function parseHeadings(content) {
-            if (cache.headings[content]) return cache.headings[content];
-            
-            const headings = [];
-            const tokens = window.marked.lexer(content);
-            
-            tokens.forEach(token => {
-                if (token.type === 'heading' && token.depth >= 1 && token.depth <= 3) {
-                    headings.push({ level: token.depth, text: token.text });
-                }
-            });
-            
-            cache.headings[content] = headings;
-            return headings;
-        }
-
-        async function displayMarkdownContent(filePath, headingsContainer) {
-
-                await checkMarkedLoaded();
-                const content = await fetchMarkdownFile(filePath);
-                const headings = parseHeadings(content);
-                
-                const container = document.createElement('div');
-                container.className = 'markdown-container';
-                
-                const contentArea = document.createElement('div');
-                contentArea.className = 'markdown-content';
-                
-                // 自定义渲染器添加标题ID
-                const renderer = new window.marked.Renderer();
-                let headingId = 0;
-                
-                renderer.heading = (text, level) => {
-                    const id = `heading-${level}-${headingId++}`;
-                    return `<h${level} id="${id}">${text}</h${level}>`;
-                };
-                
-                contentArea.innerHTML = window.marked.parse(content, { renderer });
-                container.appendChild(contentArea);
-                
-                generateHeadingsTree(headings, headingsContainer);
-                $.content.innerHTML = '';
-                $.content.appendChild(container);
-        }
-
-        function generateHeadingsTree(headings, container) {
-            container.innerHTML = '';
-            container.style.display = 'block';
-            
-            const frag = document.createDocumentFragment();
-            
-            headings.forEach(heading => {
-                const headingItem = document.createElement('div');
-                headingItem.className = `heading-item h${heading.level}`;
-                
-                // 根据标题级别设置不同的图标
-                let icon = '';
-                if (heading.level === 1) {
-                    icon = '›&nbsp;';
-                } else if (heading.level === 2) {
-                    icon = '»&nbsp;';
-                } else if (heading.level === 3) {
-                    icon = '»›&nbsp;';
-                }
-                
-                headingItem.innerHTML = `<span class="emoji-icon">${icon}</span><span>${heading.text}</span>`;
-                
-                headingItem.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    scrollToHeading(heading.text, heading.level);
-                });
-                
-                frag.appendChild(headingItem);
-            });
-            
-            container.appendChild(frag);
-        }
-
         function scrollToHeading(text, level) {
-            const headings = document.querySelectorAll(`h${level}`);
-            const target = Array.from(headings).find(h => h.textContent === text);
-            
-            if (target) {
-                const container = document.querySelector('.markdown-container');
-                const containerRect = container.getBoundingClientRect();
-                const targetRect = target.getBoundingClientRect();
-                const scrollTop = container.scrollTop;
-                const offset = targetRect.top - containerRect.top + scrollTop - 12;
-                
-                container.scrollTo({ top: offset, behavior: 'smooth' });
+            let hs=document.querySelectorAll(`h${level}`);
+            let t=Array.from(hs).find(h=>h.textContent===text);
+            if(t){let c=document.querySelector('.markdown-container'),cr=c.getBoundingClientRect(),tr=t.getBoundingClientRect(),st=c.scrollTop,off=tr.top-cr.top+st-12;c.scrollTo({top:off,behavior:'smooth'});}
+        }
+        async function checkMarkedLoaded() {
+            if (window.marked) return;
+            await new Promise(r=>{let i=setInterval(()=>{if(window.marked){clearInterval(i);r();}},100)});
+        }
+        // 事件绑定
+        $.navMenu.onclick=async e=>{
+            if(e.target.tagName==='A'){e.preventDefault();let p=e.target.dataset.path;await loadFolder(p);if(window.innerWidth<=992)$.topNav.classList.remove('active');$.content.innerHTML=cache.initialContentHTML;}
+        };
+        $.treeView.onclick=async e=>{
+            let f=e.target.closest('.folder'),file=e.target.closest('.file');
+            if(f){
+                let ch=f.parentElement.querySelector('.children');
+                ch.querySelectorAll('.folder.expanded').forEach(sf=>{sf.classList.remove('expanded');let se=sf.querySelector('.emoji-icon');if(se)se.textContent='📁';});
+                ch.querySelectorAll('.children').forEach(sc=>sc.style.display='none');
+                f.classList.toggle('expanded');
+                let em=f.querySelector('.emoji-icon');
+                if(f.classList.contains('expanded')){
+                    if(em)em.textContent='📂';
+                    if(ch.children.length===0){
+                        let d=await loadVxJson(f.dataset.path);ch.innerHTML='';
+                        d.folders.forEach(sf=>ch.appendChild(folderElem(sf,f.dataset.path)));
+                        d.files.forEach(fi=>ch.appendChild(fileElem(fi,f.dataset.path)));
+                    }
+                    ch.style.display='block';
+                }else{if(em)em.textContent='📁';ch.style.display='none';}
+            }else if(file){
+                let ch=file.parentElement.querySelector('.children');
+                if(cache.currentFile===file){let o=ch.style.display==='block';ch.style.display=o?'none':'block';file.classList.toggle('expanded',!o);return;}
+                if(cache.currentFile){let pch=cache.currentFile.parentElement.querySelector('.children');if(pch)pch.style.display='none';cache.currentFile.classList.remove('expanded','active');}
+                cache.currentFile=file;document.querySelectorAll('.file,.folder').forEach(el=>el.classList.remove('active'));
+                file.classList.add('active','expanded');
+                await showMd(file.dataset.path,ch);
             }
-        }
-
+        };
+        $.sidebarHeader.onclick=()=>{
+            if(window.innerWidth<=992){$.sidebar.classList.toggle('collapsed');let icon=$.toggleSidebar.querySelector('.emoji-icon'),col=$.sidebar.classList.contains('collapsed');$.toggleSidebar.setAttribute('data-collapsed',col);icon.textContent=col?'△':'▽';}
+        };
+        $.mobileMenuToggle.onclick=()=>{$.topNav.classList.toggle('active');};
         // 初始化
-        async function init() {
-            cache.initialContentHTML = $.content.innerHTML;
-                await loadRootDirectory();
-                setupEventListeners();
-        }
-
-        init();
+        (async function(){cache.initialContentHTML=$.content.innerHTML;let d=await loadVxJson('');if(d.folders&&d.folders.length){$.navMenu.innerHTML='';d.folders.forEach(f=>{let li=document.createElement('li'),a=document.createElement('a');a.href='#';a.textContent=f.name;a.dataset.path=f.name;li.appendChild(a);$.navMenu.appendChild(li);});let first=d.folders[0];await loadFolder(first.name);}
+        })();
     })();
     </script>
 </body>
