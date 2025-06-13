@@ -281,9 +281,9 @@
             font-size: 0.92em;
             font-style: italic;
             color: #008080;
-            margin-left: 0.5em;
+            margin-left: 1rem;
             border-left: 0.12em solid #008080;
-            padding: 0 1em;
+            padding: 0 0.8em;
             border-radius: 0 8px 8px 0;
         }
         
@@ -588,7 +588,7 @@
             c.innerHTML=''; c.style.display='block';
             h.forEach(he=>{
                 let hi=document.createElement('div'); hi.className=`heading-item h${he.level}`;
-                let icon=he.level===1?'› ':he.level===2?'» ':he.level===3?'»› ':'';
+                let icon=he.level===1?'›&ensp;':he.level===2?'»&ensp;':he.level===3?'»›&ensp;':'';
                 hi.innerHTML=`<span class="emoji-icon">${icon}</span><span>${he.text}</span>`;
                 hi.onclick=e=>{e.stopPropagation();scrollToHeading(he.text,he.level)};
                 c.appendChild(hi);
