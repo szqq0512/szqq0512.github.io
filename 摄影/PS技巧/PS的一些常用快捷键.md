@@ -1,11 +1,11 @@
-# PS的一些常用快捷键
+# PS的一些常用快捷键  
 
 调出高光选区 Ctrl+Alt+2  
 盖印图层 Ctrl+Shift+Alt+E  
-新建一层 复制图层 ctrl+j   
+新建一层复制图层 ctrl+j  
 alt+鼠标左键点击图层左边眼睛  
 反选：shift+f7  
-羽化: shift+f6  
+羽化：shift+f6  
 删除：delete  
 颜色反相：Ctrl+I  
 工作路径操纵时，底部小图标+alt，调出参数  
