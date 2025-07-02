@@ -283,6 +283,7 @@ def rule6_chinese_punctuation(line: str) -> str:
     # 新增规则4：把”“替换成”、“
     line = re.sub(r'”“', '”、“', line)
     line = re.sub(r"GDP:", "GDP：", line)
+    line = re.sub(r"▸\*\*", "▸ **", line)
 
     return line
 

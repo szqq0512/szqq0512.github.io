@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="QQXZ.COM,青青小竹,旅游,旅行,景点,国保,风景,城市介绍,乡村介绍"/>
+    <meta name="keywords" content="QQXZ.COM,青青小竹,旅游,旅行,景点,国保,风景,城市介绍,乡村介绍,中文旅行网站,旅行参考,旅游指南"/>
     <meta name="description" content="QQXZ.COM,青青小竹,青青小竹网,个人旅游资料收集,旅游资源"/>
     <title>青青小竹网 | 旅游百科 | 各地景点</title>
     <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/marked/4.0.2/marked.min.js"></script>
@@ -341,10 +341,11 @@
         .tree-view .children .folder,
         .tree-view .children .file { margin-left: 10px; }
         .markdown-content img {
-            max-width: 100%;
-            height: auto;
             display: block;
             margin: 1em auto;
+            width: auto;
+            max-width: min(100%, 1600px);
+            height: auto;
         }
         @media (max-width: 992px) {
             .top-nav { width: 100%; }
@@ -382,7 +383,7 @@
             font-weight: bold;
             border: 1.5px solid #fdcb6e;
         }
-        .search-bar input { font-size: 1em; }
+        /* .search-bar input { font-size: 1em; }  // 已合并到主样式，避免重复 */
         .search-no-result {
             display: none;
             text-align: left;
@@ -448,11 +449,11 @@
         <main class="content" id="content">
             <div class="empty-state">
                 <h2>欢迎使用青青小竹网</h2>
-		<br>
+        <br>
                  <p>一个简单的使用Markdown语法的个人笔记。</p>  
-		<br>
+        <br>
                  <p>从网上搜集整理的旅游相关资料，主要罗列了中国各地的概况、景点及特色村寨等，方便查找和出行规划。</p>
-		<br>
+        <br>
                  <p>请选择要查看的文件</p>
                <img src="https://s1.imagehub.cc/images/2025/06/13/bf3432b185d01be77f7f9f78f3a79dd7.webp" 
                      alt="Welcome Image" 
@@ -560,7 +561,7 @@
         c.innerHTML=''; c.style.display='block';
         h.forEach(he=>{
             let hi=document.createElement('div'); hi.className=`heading-item h${he.level}`;
-            let icon=he.level===1?'›&nbsp; ':he.level===2?'»&nbsp; ':he.level===3?'»›&nbsp; ':'';
+            let icon=he.level===1?'›&nbsp; ':he.level===2?'&nbsp;»&nbsp; ':he.level===3?'&nbsp;&nbsp;»›&nbsp; ':'';
             hi.innerHTML=`<span class=\"emoji-icon\">${icon}</span><span>${he.text}</span>`;
             hi.onclick=e=>{e.stopPropagation();scrollToHeading(he.text,he.level)};
             c.appendChild(hi);
