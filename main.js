@@ -1,5 +1,3 @@
-
-// 主 JS，原 index.html <script> 内容
 (function () {
     // 变量声明
     const $ = {
@@ -305,7 +303,12 @@
             clearTreeSearchHighlight();
             clearContentSearchHighlight();
           }
-          searchInput.focus();
+          // 新增：窄屏下切换类型时自动隐藏虚拟键盘
+          if (window.innerWidth <= 992) {
+            searchInput.blur();
+          } else {
+            searchInput.focus();
+          }
         };
       });
     }
@@ -341,11 +344,22 @@
             if (!fullTree) await buildFullTree();
             renderTree(fullTree, val);
             // 判断是否有高亮项
-            setTimeout(()=>{
+            setTimeout(async ()=>{
                 const firstMenu = document.querySelector('.tree-view .search-hit');
                 if(firstMenu) {
                   firstMenu.scrollIntoView({behavior:'smooth', block:'center'});
                   if (noResultBar) noResultBar.style.display = 'none';
+                  // 新增：如果第一个高亮是文件，自动打开
+                  if(firstMenu.classList.contains('file')) {
+                    // 触发文件点击逻辑，自动显示内容
+                    // 先清除之前激活
+                    document.querySelectorAll('.file,.folder').forEach(el=>el.classList.remove('active'));
+                    firstMenu.classList.add('active','expanded');
+                    // 记录当前文件
+                    cache.currentFile = firstMenu;
+                    // 打开内容
+                    await showMd(firstMenu.dataset.path, firstMenu.parentElement.querySelector('.children'));
+                  }
                 } else {
                   if (noResultBar) noResultBar.style.display = 'block';
                 }
@@ -378,6 +392,10 @@
     searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             searchHandler();
+            // 移动端收起虚拟键盘
+            if (window.innerWidth <= 992) {
+                searchInput.blur();
+            }
         }
         // Backspace 为空时阻止网页后退，只清除高亮
         if (e.key === 'Backspace' && !searchInput.value) {
@@ -397,7 +415,12 @@
     if (actionBtn) {
         actionBtn.addEventListener('click', function(e) {
             searchHandler();
-            searchInput.focus();
+            // 移动端收起虚拟键盘
+            if (window.innerWidth <= 992) {
+                searchInput.blur();
+            } else {
+                searchInput.focus();
+            }
         });
         // 初始隐藏
         actionBtn.style.visibility = searchInput.value ? 'visible' : 'hidden';

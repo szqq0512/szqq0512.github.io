@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="QQXZ.COM,青青小竹,旅游,旅行,景点,国保,风景,城市介绍,乡村介绍,中文旅行网站,旅行参考,旅游指南"/>
+    <meta name="description" content="QQXZ.COM,青青小竹,青青小竹网,个人旅游资料收集,旅游资源"/>
+    <title>青青小竹网 | 旅游百科 | 各地景点</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/12.0.2/marked.min.js"></script>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <header>
+        <div class="top-nav">
+            <div class="logo-container">
+                <div class="logo">
+                    <span class="emoji-icon" aria-label="logo">📖</span>
+                    <a href="index.html"><span>青青小竹网</span></a>
+                </div>
+                <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="展开菜单">
+                    <span class="emoji-icon" aria-label="菜单">☰</span>
+                </button>
+            </div>
+            <nav id="top-nav">
+                <ul id="nav-menu">
+                    <!-- 导航菜单将通过JS动态生成 -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="search-bar" id="search-bar" style="flex:1;position:relative;margin:6px;">
+      <div class="search-type" id="search-type" tabindex="0">
+        <span id="search-type-label">菜单</span>
+        <span class="dropdown-arrow">▼</span>
+        <div class="search-type-dropdown" id="search-type-dropdown" style="display:none;">
+          <div data-type="menu">菜单</div>
+          <div data-type="content">内容</div>
+        </div>
+      </div>
+      <input id="search-input" type="text" placeholder="搜索菜单文档..." style="padding-right:0.5em;" />
+      <span id="search-action" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:1.3em;cursor:pointer;color:#6c5ce7;user-select:none;z-index:2;width:1.5em;height:1.5em;line-height:1.5em;text-align:center;">🔍</span>
+    </div>
+    <div id="search-no-result" class="search-no-result" style="display:none;">无此搜索项</div>
+    <div class="sidebar-header" id="sidebar-header">
+        <h2 style="margin-bottom:8px;margin-top:8px;">
+          <span class="emoji-icon" aria-label="文件夹">📁</span>
+          <span id="sidebar-title"></span>
+        </h2>
+        <button class="toggle-btn" id="toggle-sidebar" data-collapsed="false" style="margin-left:8px;"><span class="emoji-icon" aria-label="下拉">▽</span></button>
+    </div>
+    <div class="tree-view" id="tree-view"></div>
+        </aside>
+        
+        <main class="content" id="content">
+            <div class="empty-state">
+                <h2>欢迎使用青青小竹网</h2>
+        <br>
+                 <p>一个简单的使用Markdown语法的个人笔记。</p>  
+        <br>
+                 <p>从网上搜集整理的旅游相关资料，主要罗列了中国各地的概况、景点及特色村寨等，方便查找和出行规划。</p>
+        <br>
+                 <p>请选择要查看的文件</p>
+        <br>
+               <img src="https://s1.imagehub.cc/images/2025/06/13/bf3432b185d01be77f7f9f78f3a79dd7.webp" 
+                     alt="Welcome Image" 
+                     class="welcome-image" 
+                     loading="lazy">
+            </div>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
