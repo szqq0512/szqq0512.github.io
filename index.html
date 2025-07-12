@@ -645,12 +645,13 @@
                 }
             }
             
-            // 创建节点元素
+            // 创建节点元素 - 统一使用📁图标
             function createNodeElem(isFolder, f, p) {
                 const c = document.createElement('div');
                 const e = document.createElement('div');
                 e.className = isFolder ? 'folder' : 'file';
                 
+                // 统一使用📁作为文件夹图标
                 const icon = isFolder ? '📁' : '📄';
                 
                 // 正确计算文件名
@@ -681,14 +682,6 @@
                 c.appendChild(e);
                 c.appendChild(ch);
                 return c;
-            }
-            
-            // 更新文件夹图标
-            function updateFolderIcon(folderElement, expanded) {
-                const icon = folderElement.querySelector('.emoji-icon');
-                if (icon) {
-                    icon.textContent = expanded ? '📂' : '📁';
-                }
             }
             
             async function fetchMd(filePath) {
@@ -864,8 +857,8 @@
                         let folder = document.createElement('div');
                         folder.className = 'folder';
                         
-                        // 使用不同的文件夹图标表示展开/折叠状态
-                        const folderIcon = node.expanded ? '📂' : '📁';
+                        // 统一使用📁图标
+                        const folderIcon = '📁';
                         folder.innerHTML = `
                             <div class="node-view normal-view">
                                 <span class="emoji-icon" aria-hidden="true">${folderIcon}</span>${node.name}
@@ -1000,7 +993,6 @@
                     const folder = parent.previousElementSibling;
                     if (folder && folder.classList.contains('folder')) {
                         folder.classList.add('expanded');
-                        updateFolderIcon(folder, true);
                         parent.style.display = 'block';
                     }
                     parent = parent.parentElement.closest('.children');
@@ -1359,9 +1351,6 @@
                     let ch = f.parentElement.querySelector('.children');
                     const isExpanding = !f.classList.contains('expanded');
                     f.classList.toggle('expanded', isExpanding);
-                    
-                    // 更新文件夹图标
-                    updateFolderIcon(f, isExpanding);
                     
                     if(isExpanding){
                         if(ch.children.length===0){
