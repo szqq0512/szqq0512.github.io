@@ -274,6 +274,17 @@
             margin-left: inherit;
         }
 
+        /* 新增图片样式 */
+        .markdown-content img {
+            max-width: 1080px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+
         @media (max-width: 992px) {
             .container { width: 100%; flex-direction: column; padding: 0; margin: 0; gap: 0; }
             .sidebar { width: 100%; border-radius: 0; max-height: 50vh; border-bottom: 1px solid var(--border); }
@@ -705,11 +716,27 @@
                 cache.headings[md]=h; 
                 return h;
             }
+ 
+            // 预处理Markdown文本 - 移除图片链接中的尺寸参数
+            function preprocessMd(md) {
+                // 匹配并移除图片链接中的尺寸参数
+                return md.replace(/!\[(.*?)\]\((.*?)\s*=\s*\d+x\d*\s*\)/g, '![$1]($2)');
+            }
+           
+            // 预处理Markdown文本 - 移除图片链接中的尺寸参数
+            function preprocessMd(md) {
+                // 匹配并移除图片链接中的尺寸参数
+                return md.replace(/!\[(.*?)\]\((.*?)\s*=\s*\d+x\d*\s*\)/g, '![$1]($2)');
+            }
             
             // Markdown渲染函数
             async function showMd(filePath, headingsContainer) {
                 await checkMarkedLoaded();
                 let md = await fetchMd(filePath);
+                
+                // 预处理Markdown文本
+                md = preprocessMd(md);
+                
                 let h = parseHeadings(md);
                 let cont = document.createElement('div'); 
                 cont.className = 'markdown-container';
