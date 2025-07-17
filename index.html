@@ -160,8 +160,8 @@
             min-height: 100px;
         }
         .folder, .file, .heading-item {
-            padding: 6px 10px 6px 1em;
-            margin: 2px 5px;
+            padding: 6px;
+            margin: 3px;
             border-radius: var(--radius);
             cursor: pointer;
             position: relative;
@@ -172,7 +172,6 @@
             overflow: hidden;
             background: var(--light);
         }
-        .heading-item { padding-left: 2em; }
         .folder:hover, .file:hover, .heading-item:hover { 
             background: #e0ebff; 
         }
@@ -264,10 +263,11 @@
         .children { display: none; }
         .folder.expanded + .children { display: block; }
         .tree-view .children {
-            margin-left: 1em;
+            margin-left: 0.5em;
         }
         .tree-view .children .folder,
-        .tree-view .children .file {
+        .tree-view .children .file,
+        .tree-view .children .heading-item {
             margin-left: inherit;
         }
 
@@ -296,8 +296,6 @@
         .search-hit {
             background: #ffe066 !important;
             color: #d35400 !important;
-            border-radius: 4px;
-            padding: 0 2px;
         }
         .tree-view .search-hit {
             font-weight: bold;
@@ -326,9 +324,7 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
-
-
-        
+ 
         /* 双ID显示控制 */
         .node-view {
             display: flex;
@@ -375,6 +371,7 @@
             border-radius: 8px;
             z-index: 1000;
         }
+
     </style>
 </head>
 <body>
@@ -383,12 +380,12 @@
             <div class="sidebar-header" id="sidebar-header">
                 <h2 id="home-link">
                     <a href="#">
-                        <span class="emoji-icon" aria-hidden="true">📖</span>
+                        <span class="emoji-icon">📖</span>
                         <span>青青小竹网</span>
                     </a>
                 </h2>
                 <button class="toggle-btn" id="toggle-sidebar" data-collapsed="false">
-                    <span class="emoji-icon" aria-hidden="true">▽</span>
+                    <span class="emoji-icon">▽</span>
                     <span class="sr-only">折叠/展开</span>
                 </button>
             </div>
@@ -590,10 +587,10 @@
                 // 修复模板字符串语法
                 e.innerHTML = `
                     <div class="node-view normal-view">
-                        <span class="emoji-icon" aria-hidden="true">${icon}</span>${name}
+                        ${icon}${name}
                     </div>
                     <div class="node-view highlight-view" style="display:none">
-                        <span class="emoji-icon" aria-hidden="true">${icon}</span>${name}
+                        ${icon}${name}
                     </div>
                 `;
                 
@@ -636,47 +633,44 @@
             // 预处理Markdown文本 - 移除图片链接中的尺寸参数
             const preprocessMd = md => md.replace(/!\[(.*?)\]\((.*?)\s*=\s*\d+x\d*\s*\)/g, '![$1]($2)');
             
-            // Markdown渲染函数
-            async function showMd(filePath, headingsContainer) {
-                await checkMarkedLoaded();
-                let md = await fetchMd(filePath);
-                
-                // 预处理Markdown文本
-                md = preprocessMd(md);
-                
-                let h = parseHeadings(md);
-                let cont = document.createElement('div'); 
-                cont.className = 'markdown-container';
-                let area = document.createElement('div'); 
-                area.className = 'markdown-content';
-                let renderer = new window.marked.Renderer();
-                let hid = 0;
-                
-                renderer.heading = function(token) {
-                    const level = token.depth;
-                    return `<h${level} id="heading-${level}-${hid++}">${token.text}</h${level}>`;
-                };
-                
-                // 生成Markdown内容
-                let htmlContent = window.marked.parse(md, {
-                    renderer,
-                    sanitize: true,
-                    breaks: false,
-                    gfm: true,
-                    tables: true
-                });
-                
-                // 应用安全过滤
-                area.innerHTML = utils.safeSanitize(htmlContent);
-                
-                // 保存原始内容
-                cache.originalContent = area.cloneNode(true);
-                cache.firstHitElement = null;
-                
-                cont.appendChild(area);
-                genHeadingsTree(h, headingsContainer);
-                $.content.innerHTML = ''; 
-                $.content.appendChild(cont);
+// Markdown渲染函数
+async function showMd(filePath, headingsContainer) {
+    await checkMarkedLoaded();
+    let md = await fetchMd(filePath);
+    let h = parseHeadings(md);
+    let cont = document.createElement('div'); 
+    cont.className = 'markdown-container';
+    let area = document.createElement('div'); 
+    area.className = 'markdown-content';
+    let renderer = new window.marked.Renderer();
+    let hid = 0;
+
+    renderer.heading = function(token) {
+        const level = token.depth;
+        return `<h${level} id="heading-${level}-${hid++}">${token.text}</h${level}>`;
+    };
+
+    let htmlContent = window.marked.parse(md, {
+        renderer,
+        sanitize: true,
+        breaks: false,
+        gfm: true,
+        tables: true
+    });
+
+    area.innerHTML = utils.safeSanitize(htmlContent);
+    cache.originalContent = area.cloneNode(true);
+    cache.firstHitElement = null;
+    cont.appendChild(area);
+
+    // 关键：生成标题菜单
+    if (headingsContainer) {
+        genHeadingsTree(h, headingsContainer);
+        headingsContainer.style.display = h.length ? 'block' : 'none';
+    }
+
+    $.content.innerHTML = ''; 
+    $.content.appendChild(cont);
                 
                 // 如果当前有内容搜索，在新文档中执行搜索
                 if (cache.currentSearch.type === 'content' && cache.currentSearch.keyword) {
@@ -695,34 +689,33 @@
             }
             
 function genHeadingsTree(h, c) {
-    if (!c) return;
     c.innerHTML = '';
-    c.style.display = 'block';
     h.forEach(he => {
-        const hi = document.createElement('div');
+        let hi = document.createElement('div');
         hi.className = `heading-item h${he.level}`;
-        const icon = he.level === 1 ? '› ' : he.level === 2 ? ' » ' : he.level === 3 ? '  »› ' : '';
-        hi.innerHTML = `<span class="emoji-icon" aria-hidden="true">${icon}</span><span>${he.text}</span>`;
+        let icon = he.level === 1 ? '› ' : he.level === 2 ? ' &#x20;» ' : he.level === 3 ? ' &#x20;&#x20; »› ' : '';
+        hi.innerHTML = `<span>&#x20;${icon}&#x20;${he.text}</span>`;
         hi.onclick = e => {
             e.stopPropagation();
             scrollToHeading(he.text, he.level);
         };
         c.appendChild(hi);
     });
-    function scrollToHeading(text, level) {
-        let hs = document.querySelectorAll(`h${level}`);
-        let t = Array.from(hs).find(h => h.textContent === text);
-        if (t) {
-            let container = document.querySelector('.markdown-container');
-            let cr = container.getBoundingClientRect();
-            let tr = t.getBoundingClientRect();
-            let st = container.scrollTop;
-            let off = tr.top - cr.top + st - 12;
-            container.scrollTo({ top: off, behavior: 'smooth' });
-        }
-    }
 }
-            
+
+// 单独定义
+function scrollToHeading(text, level) {
+    let hs = document.querySelectorAll(`h${level}`);
+    let t = Array.from(hs).find(h => h.textContent === text);
+    if (t) {
+        let container = document.querySelector('.markdown-container');
+        let cr = container.getBoundingClientRect();
+        let tr = t.getBoundingClientRect();
+        let st = container.scrollTop;
+        let off = tr.top - cr.top + st - 12;
+        container.scrollTo({ top: off, behavior: 'smooth' });
+    }
+}            
             // 确保marked.js加载完成
             async function checkMarkedLoaded() {
                 if (window.marked) return;
@@ -795,10 +788,10 @@ function genHeadingsTree(h, c) {
                         const folderIcon = '📁';
                         folder.innerHTML = `
                             <div class="node-view normal-view">
-                                <span class="emoji-icon" aria-hidden="true">${folderIcon}</span>${node.name}
+                                <span class="emoji-icon">${folderIcon}</span>${node.name}
                             </div>
                             <div class="node-view highlight-view" style="display:none">
-                                <span class="emoji-icon" aria-hidden="true">${folderIcon}</span>${node.name}
+                                <span class="emoji-icon">${folderIcon}</span>${node.name}
                             </div>
                         `;
                         
@@ -826,10 +819,10 @@ function genHeadingsTree(h, c) {
                         let n = node.name.endsWith('.md') ? node.name.slice(0, -3) : node.name;
                         file.innerHTML = `
                             <div class="node-view normal-view">
-                                <span class="emoji-icon" aria-hidden="true">📄</span>${n}
+                                <span class="emoji-icon">📄</span>${n}
                             </div>
                             <div class="node-view highlight-view" style="display:none">
-                                <span class="emoji-icon" aria-hidden="true">📄</span>${n}
+                                <span class="emoji-icon">📄</span>${n}
                             </div>
                         `;
                         
@@ -855,6 +848,15 @@ function genHeadingsTree(h, c) {
             // 搜索高亮功能
             const applySearchHighlight = keyword => {
                 if (!keyword) return;
+                // 先清除所有高亮
+                $.treeView.querySelectorAll('.folder, .file').forEach(node => {
+                    node.classList.remove('search-hit');
+                    const highlightView = node.querySelector('.highlight-view');
+                    const normalView = node.querySelector('.normal-view');
+                    if (highlightView && normalView) {
+                        highlightView.innerHTML = normalView.innerHTML;
+                    }
+                });
                 const lowerKeyword = keyword.toLowerCase();
                 cache.searchMatches = [];
                 collapseAllFolders();
@@ -865,13 +867,11 @@ function genHeadingsTree(h, c) {
                         const highlightView = node.querySelector('.highlight-view');
                         if (highlightView) {
                             const icon = node.querySelector('.emoji-icon').textContent;
-                            highlightView.innerHTML = `<span class="emoji-icon" aria-hidden="true">${icon}</span>${utils.highlightText(name, keyword)}`;
+                            highlightView.innerHTML = `<span class="emoji-icon">${icon}</span>${utils.highlightText(name, keyword)}`;
                         }
                         node.classList.add('search-hit');
                         cache.searchMatches.push({ element: node, isFile: node.classList.contains('file') });
                         expandParentContainers(node);
-                    } else {
-                        node.classList.remove('search-hit');
                     }
                 });
                 const foundMatch = cache.searchMatches.length > 0;
@@ -1255,15 +1255,41 @@ $.treeView.onclick = async e => {
         } else {
             ch.style.display = 'none';
         }
-    } else if (file) {
-        if (cache.currentFile === file) {
-            return;
-        }
-        document.querySelectorAll('.file.active').forEach(el => el.classList.remove('active'));
-        file.classList.add('active');
-        cache.currentFile = file;
-        await showMd(file.dataset.path); // 不传第二个参数
+    } else if(file) {
+    // 查找文件元素的子容器
+    let fileElement = file;
+    let ch = fileElement.nextElementSibling;
+
+    // 如果子容器不存在或不是正确的类型，创建一个
+    if (!ch || !ch.classList.contains('children')) {
+        ch = document.createElement('div');
+        ch.className = 'children';
+        ch.style.display = 'none'; // 默认隐藏
+        fileElement.parentNode.insertBefore(ch, fileElement.nextSibling);
     }
+
+    if(cache.currentFile === file){
+        let o = ch.style.display === 'block';
+        ch.style.display = o ? 'none' : 'block';
+        file.classList.toggle('expanded',!o);
+        return;
+    }
+
+    if(cache.currentFile){
+        let pch = cache.currentFile.nextElementSibling;
+        if(pch && pch.classList.contains('children')) {
+            pch.style.display = 'none';
+        }
+        cache.currentFile.classList.remove('expanded','active');
+    }
+
+    cache.currentFile = file;
+    document.querySelectorAll('.file,.folder').forEach(el=>el.classList.remove('active'));
+    file.classList.add('active','expanded');
+
+    // 打开新文档
+    await showMd(file.dataset.path, ch);
+}
 };
             
             $.toggleSidebar.onclick = toggleSidebar;
