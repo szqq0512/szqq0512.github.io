@@ -747,6 +747,17 @@ function scrollToHeading(text, level) {
             }
             
             // 构建全量树
+            // 构建首页第一层（只加载旅游/vx.json）
+            async function buildFirstLayer() {
+                const data = await loadVxJson("");
+                $.treeView.innerHTML = "";
+                (data.folders||[]).forEach(f => {
+                    $.treeView.appendChild(createNodeElem(true, f, ""));
+                });
+                (data.files||[]).forEach(f => {
+                    $.treeView.appendChild(createNodeElem(false, f, ""));
+                });
+            }
             async function buildFullTree() {
                 async function walk(path) {
                     const data = await loadVxJson(path);
@@ -1102,33 +1113,23 @@ function scrollToHeading(text, level) {
             // 搜索策略映射
             const searchStrategies = {
                 menu: async (val) => {
+                    // 搜索时全量加载菜单
                     if (!fullTree) await buildFullTree();
-                    
-                    // 应用双ID高亮方案
+                    $.treeView.innerHTML = '';
+                    renderTree(fullTree);
                     $.treeView.classList.add('search-mode');
-                    
                     applySearchHighlight(val);
-                    
-                    // 保存当前搜索状态
                     cache.currentSearch.keyword = val;
                     cache.currentSearch.type = 'menu';
                     cache.currentSearch.lastKeyword = val;
                     cache.currentSearch.lastType = 'menu';
                 },
                 content: async (val) => {
-                    // 重置搜索取消标志
                     cache.searchCanceled = false;
-                    
                     const found = await searchContent(val);
-                    
-                    // 更新状态
                     cache.hasSearchResult = found;
-                    
-                    // 显示/隐藏无结果提示
                     $.searchNoResult.style.display = found ? 'none' : 'block';
                     $.searchNoResult.textContent = found ? '' : '无此搜索项';
-                    
-                    // 保存当前搜索状态
                     cache.currentSearch.keyword = val;
                     cache.currentSearch.type = 'content';
                     cache.currentSearch.lastKeyword = val;
@@ -1373,15 +1374,7 @@ $.treeView.onclick = async e => {
             // 初始化函数
             async function initApp() {
                 cache.initialContentHTML = $.content.innerHTML;
-                
-                try {
-                    await buildFullTree();
-                    if (fullTree) {
-                        renderTree(fullTree);
-                    }
-                } catch (error) {
-                    // 静默失败
-                }
+                await buildFirstLayer();
             }
             
             // 设置事件监听器
