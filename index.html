@@ -82,7 +82,7 @@
             gap: 6px;
             min-width: 0;
             height: 36px;
-            margin: 0 10px 10px;
+            margin: 6px;
             position: relative; 
             border: 1px solid var(--border);
         }
@@ -161,7 +161,7 @@
         }
         .folder, .file, .heading-item {
             padding: 6px;
-            margin: 3px;
+            margin: 3px 6px;
             border-radius: var(--radius);
             cursor: pointer;
             position: relative;
@@ -250,25 +250,20 @@
             align-items: center;
         }
 
-.markdown-content img,
-.welcome-image,
-.markdown-content table {
-    max-width: min(99%, 1400px);
-    height: auto;
-    display: block;
-    margin: 10px auto;
-    border-collapse: collapse;
-}
+        .markdown-content img,
+        .welcome-image,
+        .markdown-content table {
+            max-width: min(99%, 1400px);
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border-collapse: collapse;
+        }
 
         .children { display: none; }
         .folder.expanded + .children { display: block; }
         .tree-view .children {
-            margin-left: 0.5em;
-        }
-        .tree-view .children .folder,
-        .tree-view .children .file,
-        .tree-view .children .heading-item {
-            margin-left: inherit;
+            margin-left: 1em;
         }
 
         @media (max-width: 992px) {
@@ -371,17 +366,17 @@
             border-radius: 8px;
             z-index: 1000;
         }
-    </style>
+        </style>
 
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?ea67aeb3b67c41e31eef6b9a5d69c6ca";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?ea67aeb3b67c41e31eef6b9a5d69c6ca";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
 
 </head>
 <body>
@@ -643,44 +638,44 @@ var _hmt = _hmt || [];
             // 预处理Markdown文本 - 移除图片链接中的尺寸参数
             const preprocessMd = md => md.replace(/!\[(.*?)\]\((.*?)\s*=\s*\d+x\d*\s*\)/g, '![$1]($2)');
             
-// Markdown渲染函数
-async function showMd(filePath, headingsContainer) {
-    await checkMarkedLoaded();
-    let md = await fetchMd(filePath);
-    let h = parseHeadings(md);
-    let cont = document.createElement('div'); 
-    cont.className = 'markdown-container';
-    let area = document.createElement('div'); 
-    area.className = 'markdown-content';
-    let renderer = new window.marked.Renderer();
-    let hid = 0;
+            // Markdown渲染函数
+            async function showMd(filePath, headingsContainer) {
+                await checkMarkedLoaded();
+                let md = await fetchMd(filePath);
+                let h = parseHeadings(md);
+                let cont = document.createElement('div'); 
+                cont.className = 'markdown-container';
+                let area = document.createElement('div'); 
+                area.className = 'markdown-content';
+                let renderer = new window.marked.Renderer();
+                let hid = 0;
 
-    renderer.heading = function(token) {
-        const level = token.depth;
-        return `<h${level} id="heading-${level}-${hid++}">${token.text}</h${level}>`;
-    };
+                renderer.heading = function(token) {
+                    const level = token.depth;
+                    return `<h${level} id="heading-${level}-${hid++}">${token.text}</h${level}>`;
+                };
 
-    let htmlContent = window.marked.parse(md, {
-        renderer,
-        sanitize: true,
-        breaks: false,
-        gfm: true,
-        tables: true
-    });
+                let htmlContent = window.marked.parse(md, {
+                    renderer,
+                    sanitize: true,
+                    breaks: false,
+                    gfm: true,
+                    tables: true
+                });
 
-    area.innerHTML = utils.safeSanitize(htmlContent);
-    cache.originalContent = area.cloneNode(true);
-    cache.firstHitElement = null;
-    cont.appendChild(area);
+                area.innerHTML = utils.safeSanitize(htmlContent);
+                cache.originalContent = area.cloneNode(true);
+                cache.firstHitElement = null;
+                cont.appendChild(area);
 
-    // 关键：生成标题菜单
-    if (headingsContainer) {
-        genHeadingsTree(h, headingsContainer);
-        headingsContainer.style.display = h.length ? 'block' : 'none';
-    }
+                // 关键：生成标题菜单
+                if (headingsContainer) {
+                    genHeadingsTree(h, headingsContainer);
+                    headingsContainer.style.display = h.length ? 'block' : 'none';
+                }
 
-    $.content.innerHTML = ''; 
-    $.content.appendChild(cont);
+                $.content.innerHTML = ''; 
+                $.content.appendChild(cont);
                 
                 // 如果当前有内容搜索，在新文档中执行搜索
                 if (cache.currentSearch.type === 'content' && cache.currentSearch.keyword) {
@@ -698,34 +693,34 @@ async function showMd(filePath, headingsContainer) {
                 return cont;
             }
             
-function genHeadingsTree(h, c) {
-    c.innerHTML = '';
-    h.forEach(he => {
-        let hi = document.createElement('div');
-        hi.className = `heading-item h${he.level}`;
-        let icon = he.level === 1 ? '› ' : he.level === 2 ? ' &#x20;» ' : he.level === 3 ? ' &#x20;&#x20; »› ' : '';
-        hi.innerHTML = `<span>&#x20;${icon}&#x20;${he.text}</span>`;
-        hi.onclick = e => {
-            e.stopPropagation();
-            scrollToHeading(he.text, he.level);
-        };
-        c.appendChild(hi);
-    });
-}
+            function genHeadingsTree(h, c) {
+                c.innerHTML = '';
+                h.forEach(he => {
+                    let hi = document.createElement('div');
+                    hi.className = `heading-item h${he.level}`;
+                    let icon = he.level === 1 ? '› ' : he.level === 2 ? ' &#x20;» ' : he.level === 3 ? ' &#x20;&#x20; »› ' : '';
+                    hi.innerHTML = `<span>&#x20;${icon}&#x20;${he.text}</span>`;
+                    hi.onclick = e => {
+                        e.stopPropagation();
+                        scrollToHeading(he.text, he.level);
+                    };
+                    c.appendChild(hi);
+                });
+            }
 
-// 单独定义
-function scrollToHeading(text, level) {
-    let hs = document.querySelectorAll(`h${level}`);
-    let t = Array.from(hs).find(h => h.textContent === text);
-    if (t) {
-        let container = document.querySelector('.markdown-container');
-        let cr = container.getBoundingClientRect();
-        let tr = t.getBoundingClientRect();
-        let st = container.scrollTop;
-        let off = tr.top - cr.top + st - 12;
-        container.scrollTo({ top: off, behavior: 'smooth' });
-    }
-}            
+            // 单独定义
+            function scrollToHeading(text, level) {
+                let hs = document.querySelectorAll(`h${level}`);
+                let t = Array.from(hs).find(h => h.textContent === text);
+                if (t) {
+                    let container = document.querySelector('.markdown-container');
+                    let cr = container.getBoundingClientRect();
+                    let tr = t.getBoundingClientRect();
+                    let st = container.scrollTop;
+                    let off = tr.top - cr.top + st - 12;
+                    container.scrollTo({ top: off, behavior: 'smooth' });
+                }
+            }            
             // 确保marked.js加载完成
             async function checkMarkedLoaded() {
                 if (window.marked) return;
@@ -1237,71 +1232,71 @@ function scrollToHeading(text, level) {
                 });
             }
             
-$.treeView.onclick = async e => {
-    let f = e.target.closest('.folder'), file = e.target.closest('.file');
-    if (f && window.innerWidth <= 992 && $.sidebar.classList.contains('collapsed')) {
-        expandSidebarIfNeeded();
-    }
-    if ($.searchNoResult.style.display === 'block') {
-        clearSearch();
-    }
-    if (f) {
-        const currentPath = f.dataset.path;
-        closeUnrelatedFolders(currentPath);
-        let ch = f.parentElement.querySelector('.children');
-        const isExpanding = !f.classList.contains('expanded');
-        f.classList.toggle('expanded', isExpanding);
-        if (isExpanding) {
-            if (ch.children.length === 0) {
-                // 懒加载子目录
-                const data = await loadVxJson(currentPath);
-                (data.folders || []).forEach(subf => {
-                    ch.appendChild(createNodeElem(true, subf, currentPath));
-                });
-                (data.files || []).forEach(subf => {
-                    ch.appendChild(createNodeElem(false, subf, currentPath));
-                });
+            $.treeView.onclick = async e => {
+                let f = e.target.closest('.folder'), file = e.target.closest('.file');
+                if (f && window.innerWidth <= 992 && $.sidebar.classList.contains('collapsed')) {
+                    expandSidebarIfNeeded();
+                }
+                if ($.searchNoResult.style.display === 'block') {
+                    clearSearch();
+                }
+                if (f) {
+                    const currentPath = f.dataset.path;
+                    closeUnrelatedFolders(currentPath);
+                    let ch = f.parentElement.querySelector('.children');
+                    const isExpanding = !f.classList.contains('expanded');
+                    f.classList.toggle('expanded', isExpanding);
+                    if (isExpanding) {
+                        if (ch.children.length === 0) {
+                            // 懒加载子目录
+                            const data = await loadVxJson(currentPath);
+                            (data.folders || []).forEach(subf => {
+                                ch.appendChild(createNodeElem(true, subf, currentPath));
+                            });
+                            (data.files || []).forEach(subf => {
+                                ch.appendChild(createNodeElem(false, subf, currentPath));
+                            });
+                        }
+                        ch.style.display = 'block';
+                    } else {
+                        ch.style.display = 'none';
+                    }
+                } else if(file) {
+                // 查找文件元素的子容器
+                let fileElement = file;
+                let ch = fileElement.nextElementSibling;
+
+                // 如果子容器不存在或不是正确的类型，创建一个
+                if (!ch || !ch.classList.contains('children')) {
+                    ch = document.createElement('div');
+                    ch.className = 'children';
+                    ch.style.display = 'none'; // 默认隐藏
+                    fileElement.parentNode.insertBefore(ch, fileElement.nextSibling);
+                }
+
+                if(cache.currentFile === file){
+                    let o = ch.style.display === 'block';
+                    ch.style.display = o ? 'none' : 'block';
+                    file.classList.toggle('expanded',!o);
+                    return;
+                }
+
+                if(cache.currentFile){
+                    let pch = cache.currentFile.nextElementSibling;
+                    if(pch && pch.classList.contains('children')) {
+                        pch.style.display = 'none';
+                    }
+                    cache.currentFile.classList.remove('expanded','active');
+                }
+
+                cache.currentFile = file;
+                document.querySelectorAll('.file,.folder').forEach(el=>el.classList.remove('active'));
+                file.classList.add('active','expanded');
+
+                // 打开新文档
+                await showMd(file.dataset.path, ch);
             }
-            ch.style.display = 'block';
-        } else {
-            ch.style.display = 'none';
-        }
-    } else if(file) {
-    // 查找文件元素的子容器
-    let fileElement = file;
-    let ch = fileElement.nextElementSibling;
-
-    // 如果子容器不存在或不是正确的类型，创建一个
-    if (!ch || !ch.classList.contains('children')) {
-        ch = document.createElement('div');
-        ch.className = 'children';
-        ch.style.display = 'none'; // 默认隐藏
-        fileElement.parentNode.insertBefore(ch, fileElement.nextSibling);
-    }
-
-    if(cache.currentFile === file){
-        let o = ch.style.display === 'block';
-        ch.style.display = o ? 'none' : 'block';
-        file.classList.toggle('expanded',!o);
-        return;
-    }
-
-    if(cache.currentFile){
-        let pch = cache.currentFile.nextElementSibling;
-        if(pch && pch.classList.contains('children')) {
-            pch.style.display = 'none';
-        }
-        cache.currentFile.classList.remove('expanded','active');
-    }
-
-    cache.currentFile = file;
-    document.querySelectorAll('.file,.folder').forEach(el=>el.classList.remove('active'));
-    file.classList.add('active','expanded');
-
-    // 打开新文档
-    await showMd(file.dataset.path, ch);
-}
-};
+            };
             
             $.toggleSidebar.onclick = toggleSidebar;
             
