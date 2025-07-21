@@ -187,7 +187,7 @@
         .markdown-container {
             flex: 1;
             overflow-y: auto;
-            padding: 2em;
+            padding: 1.5em;
             background: #fff;
             padding-bottom: max(2em, 12vh);
         }
@@ -367,16 +367,6 @@
             z-index: 1000;
         }
         </style>
-
-        <script>
-            var _hmt = _hmt || [];
-            (function() {
-              var hm = document.createElement("script");
-              hm.src = "https://hm.baidu.com/hm.js?ea67aeb3b67c41e31eef6b9a5d69c6ca";
-              var s = document.getElementsByTagName("script")[0]; 
-              s.parentNode.insertBefore(hm, s);
-            })();
-        </script>
 
 </head>
 <body>
@@ -1118,6 +1108,19 @@
                     cache.currentSearch.type = 'menu';
                     cache.currentSearch.lastKeyword = val;
                     cache.currentSearch.lastType = 'menu';
+
+                    // 自动打开第一个匹配到的文档
+                    // 只在有多个匹配项时也自动打开第一个文档
+                    if (cache.searchMatches && cache.searchMatches.length > 0) {
+                        // 找到第一个文件类型的匹配项
+                        const firstFile = cache.searchMatches.find(m => m.isFile);
+                        if (firstFile && firstFile.element) {
+                            // 触发点击事件，自动打开文档
+                            setTimeout(() => {
+                                firstFile.element.click();
+                            }, 200);
+                        }
+                    }
                 },
                 content: async (val) => {
                     cache.searchCanceled = false;
