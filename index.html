@@ -367,7 +367,37 @@
             z-index: 1000;
         }
         </style>
-
+    <script>
+    // 零宽字符水印与编码混淆工具（优化版）
+    const WatermarkObfuscator = {
+        watermark: '\u200b\u200c\u200d', // 零宽字符水印
+        encode: function(str) {
+            // 简单编码混淆：Base64 + 零宽字符水印
+            let b64 = btoa(unescape(encodeURIComponent(str)));
+            return this.watermark + b64.split('').map(c => c + this.watermark).join('');
+        },
+        decode: function(str) {
+            // 去除零宽字符水印并解码
+            let cleaned = str.replace(new RegExp(this.watermark, 'g'), '');
+            try {
+                return decodeURIComponent(escape(atob(cleaned)));
+            } catch {
+                return str;
+            }
+        },
+        hasWatermark: function(str) {
+            return str && str.indexOf(this.watermark) !== -1;
+        },
+        injectWatermark: function(str) {
+            // 若无水印则编码混淆
+            return this.hasWatermark(str) ? str : this.encode(str);
+        },
+        removeWatermark: function(str) {
+            // 若有水印则解码
+            return this.hasWatermark(str) ? this.decode(str) : str;
+        }
+    };
+    </script>
 </head>
 <body>
     <div class="container">
@@ -565,6 +595,8 @@
             // 创建节点元素 - 统一使用📁图标
             function createNodeElem(isFolder, f, p) {
                 const c = document.createElement('div');
+                c.classList.add('fade-in');
+                
                 const e = document.createElement('div');
                 e.className = isFolder ? 'folder' : 'file';
                 
@@ -579,7 +611,6 @@
                     name = f.name.endsWith('.md') ? f.name.slice(0, -3) : f.name;
                 }
                 
-                // 修复模板字符串语法
                 e.innerHTML = `
                     <div class="node-view normal-view">
                         ${icon}${name}
@@ -601,15 +632,21 @@
                 return c;
             }
             
+            // fetchMd 只在首次获取时注入水印和混淆，缓存存混淆内容，返回解码内容
             async function fetchMd(filePath) {
                 const full = utils.joinPath('旅游', filePath);
-                if (cache.mdContent[full]) return cache.mdContent[full];
+                if (cache.mdContent[full]) {
+                    // 始终返回解码后的内容
+                    return WatermarkObfuscator.removeWatermark(cache.mdContent[full]);
+                }
                 try {
                     const r = await fetch(full);
                     if (!r.ok) return '';
-                    const t = await r.text();
+                    let t = await r.text();
+                    // 首次获取时注入水印和混淆
+                    t = WatermarkObfuscator.injectWatermark(t);
                     cache.mdContent[full] = t;
-                    return t;
+                    return WatermarkObfuscator.removeWatermark(t);
                 } catch {
                     return '';
                 }
@@ -625,13 +662,10 @@
                 return h;
             }
  
-            // 预处理Markdown文本 - 移除图片链接中的尺寸参数
-            const preprocessMd = md => md.replace(/!\[(.*?)\]\((.*?)\s*=\s*\d+x\d*\s*\)/g, '![$1]($2)');
-            
             // Markdown渲染函数
             async function showMd(filePath, headingsContainer) {
                 await checkMarkedLoaded();
-                let md = await fetchMd(filePath);
+                let md = await fetchMd(filePath); // 已解码
                 let h = parseHeadings(md);
                 let cont = document.createElement('div'); 
                 cont.className = 'markdown-container';
@@ -670,8 +704,6 @@
                 // 如果当前有内容搜索，在新文档中执行搜索
                 if (cache.currentSearch.type === 'content' && cache.currentSearch.keyword) {
                     const found = await searchContent(cache.currentSearch.keyword);
-                    
-                    // 如果没有匹配项，显示提示
                     if (!found) {
                         $.searchNoResult.style.display = 'block';
                         $.searchNoResult.textContent = '无此搜索项';
@@ -731,7 +763,6 @@
                 });
             }
             
-            // 构建全量树
             // 构建首页第一层（只加载旅游/vx.json）
             async function buildFirstLayer() {
                 const data = await loadVxJson("");
@@ -742,40 +773,6 @@
                 (data.files||[]).forEach(f => {
                     $.treeView.appendChild(createNodeElem(false, f, ""));
                 });
-            }
-            async function buildFullTree() {
-                async function walk(path) {
-                    const data = await loadVxJson(path);
-                    let node = {
-                        name: path.split('/').pop()||'根目录', 
-                        path, 
-                        type:'folder', 
-                        children:[],
-                        expanded: false
-                    };
-                    
-                    // 添加到路径映射
-                    cache.pathMap.set(path, node);
-                    
-                    (data.folders||[]).forEach(f=>{
-                        const childPath = path ? `${path}/${f.name}` : f.name;
-                        node.children.push(walk(childPath));
-                    });
-                    
-                    (data.files||[]).forEach(f=>{
-                        const filePath = path ? `${path}/${f.name}` : f.name;
-                        const fileNode = {
-                            name: f.name, 
-                            path: filePath, 
-                        };
-                        node.children.push(Promise.resolve(fileNode));
-                        cache.pathMap.set(filePath, fileNode);
-                    });
-                    
-                    node.children = await Promise.all(node.children);
-                    return node;
-                }
-                fullTree = await walk('');
             }
             
             // 渲染树
@@ -1099,7 +1096,45 @@
             const searchStrategies = {
                 menu: async (val) => {
                     // 搜索时全量加载菜单
-                    if (!fullTree) await buildFullTree();
+                    if (!fullTree) {
+                        // 构建全量树
+                        async function buildFullTree() {
+                            async function walk(path) {
+                                const data = await loadVxJson(path);
+                                let node = {
+                                    name: path.split('/').pop()||'根目录', 
+                                    path, 
+                                    type:'folder', 
+                                    children:[],
+                                    expanded: false
+                                };
+                                
+                                // 添加到路径映射
+                                cache.pathMap.set(path, node);
+                                
+                                (data.folders||[]).forEach(f=>{
+                                    const childPath = path ? `${path}/${f.name}` : f.name;
+                                    node.children.push(walk(childPath));
+                                });
+                                
+                                (data.files||[]).forEach(f=>{
+                                    const filePath = path ? `${path}/${f.name}` : f.name;
+                                    const fileNode = {
+                                        name: f.name, 
+                                        path: filePath, 
+                                    };
+                                    node.children.push(Promise.resolve(fileNode));
+                                    cache.pathMap.set(filePath, fileNode);
+                                });
+                                
+                                node.children = await Promise.all(node.children);
+                                return node;
+                            }
+                            fullTree = await walk('');
+                        }
+                        await buildFullTree();
+                    }
+                    
                     $.treeView.innerHTML = '';
                     renderTree(fullTree);
                     $.treeView.classList.add('search-mode');
@@ -1110,7 +1145,6 @@
                     cache.currentSearch.lastType = 'menu';
 
                     // 自动打开第一个匹配到的文档
-                    // 只在有多个匹配项时也自动打开第一个文档
                     if (cache.searchMatches && cache.searchMatches.length > 0) {
                         // 找到第一个文件类型的匹配项
                         const firstFile = cache.searchMatches.find(m => m.isFile);
@@ -1264,41 +1298,41 @@
                     } else {
                         ch.style.display = 'none';
                     }
-                } else if(file) {
-                // 查找文件元素的子容器
-                let fileElement = file;
-                let ch = fileElement.nextElementSibling;
+                } else if (file) {
+                    // 查找文件元素的子容器
+                    let fileElement = file;
+                    let ch = fileElement.nextElementSibling;
 
-                // 如果子容器不存在或不是正确的类型，创建一个
-                if (!ch || !ch.classList.contains('children')) {
-                    ch = document.createElement('div');
-                    ch.className = 'children';
-                    ch.style.display = 'none'; // 默认隐藏
-                    fileElement.parentNode.insertBefore(ch, fileElement.nextSibling);
-                }
-
-                if(cache.currentFile === file){
-                    let o = ch.style.display === 'block';
-                    ch.style.display = o ? 'none' : 'block';
-                    file.classList.toggle('expanded',!o);
-                    return;
-                }
-
-                if(cache.currentFile){
-                    let pch = cache.currentFile.nextElementSibling;
-                    if(pch && pch.classList.contains('children')) {
-                        pch.style.display = 'none';
+                    // 如果子容器不存在或不是正确的类型，创建一个
+                    if (!ch || !ch.classList.contains('children')) {
+                        ch = document.createElement('div');
+                        ch.className = 'children';
+                        ch.style.display = 'none'; // 默认隐藏
+                        fileElement.parentNode.insertBefore(ch, fileElement.nextSibling);
                     }
-                    cache.currentFile.classList.remove('expanded','active');
+
+                    if (cache.currentFile === file) {
+                        let o = ch.style.display === 'block';
+                        ch.style.display = o ? 'none' : 'block';
+                        file.classList.toggle('expanded', !o);
+                        return;
+                    }
+
+                    if (cache.currentFile) {
+                        let pch = cache.currentFile.nextElementSibling;
+                        if (pch && pch.classList.contains('children')) {
+                            pch.style.display = 'none';
+                        }
+                        cache.currentFile.classList.remove('expanded', 'active');
+                    }
+
+                    cache.currentFile = file;
+                    document.querySelectorAll('.file,.folder').forEach(el => el.classList.remove('active'));
+                    file.classList.add('active', 'expanded');
+
+                    // 打开新文档
+                    await showMd(file.dataset.path, ch);
                 }
-
-                cache.currentFile = file;
-                document.querySelectorAll('.file,.folder').forEach(el=>el.classList.remove('active'));
-                file.classList.add('active','expanded');
-
-                // 打开新文档
-                await showMd(file.dataset.path, ch);
-            }
             };
             
             $.toggleSidebar.onclick = toggleSidebar;
@@ -1388,5 +1422,41 @@
             initApp();
         })();
     </script>
+    <!-- 监听复制事件，自动插入零宽字符水印 -->
+    <!-- 
+    <script>
+    document.addEventListener('copy', function(e) {
+        // 判断复制区域是否在 markdown-content
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed) return;
+        const container = document.querySelector('.markdown-content');
+        if (!container) return;
+        // 判断选区是否在 markdown-content 内部
+        let inMarkdown = false;
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            if (container.contains(range.commonAncestorContainer)) {
+                inMarkdown = true;
+            }
+        }
+        if (!inMarkdown) return;
+
+        // 获取选中的文本
+        let text = selection.toString();
+        if (!text) return;
+
+        // 插入水印
+        const watermarked = WatermarkObfuscator.injectWatermark(text);
+
+        // 设置剪贴板内容
+        e.preventDefault();
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', watermarked);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', watermarked);
+        }
+    });
+    </script>
+    -->
 </body>
 </html>
