@@ -367,6 +367,7 @@
             z-index: 1000;
         }
         </style>
+<!--
     <script>
     // 零宽字符水印与编码混淆工具（优化版）
     const WatermarkObfuscator = {
@@ -397,7 +398,70 @@
             return this.hasWatermark(str) ? this.decode(str) : str;
         }
     };
-    </script>
+
+    // 默认启用：复制时插入水印和混淆
+    document.addEventListener('copy', function(e) {
+        var selection = window.getSelection();
+        var text = selection.toString();
+        var container = document.querySelector('.markdown-content');
+        if (!container) return;
+        if (selection.rangeCount > 0) {
+            var range = selection.getRangeAt(0);
+            if (!container.contains(range.commonAncestorContainer)) return;
+        }
+        if (!text) return;
+        // 插入水印和混淆
+        var watermarked = WatermarkObfuscator.injectWatermark(text);
+        e.preventDefault();
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', watermarked);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', watermarked);
+        }
+    });
+-->
+<!--    // 如需只插入水印干扰（不混淆），可用如下脚本（注释掉上面即可） -->
+     <script>
+     document.addEventListener('copy', function(e) {
+         var selection = window.getSelection();
+         var text = selection.toString();
+         var container = document.querySelector('.markdown-content');
+         if (!container) return;
+         if (selection.rangeCount > 0) {
+             var range = selection.getRangeAt(0);
+             if (!container.contains(range.commonAncestorContainer)) return;
+         }
+         if (!text) return;
+         function garble(str) {
+             const zw = ['\u200B', '\u200C', '\u200D', '\u200E', '\u200F'];
+             const marks = [
+                 '青青小竹网', 'Ⓒ2025', '㊣', '※', 'qqxz.com', '水印', '㊙', 'QQXZ', '♆', '青青小竹', '㊎', 'www.qqxz.com', '㊏', '℡', '。',  '㊓'
+             ];
+             let arr = [];
+             for (let i = 0; i < 3 + Math.floor(Math.random()*3); i++) {
+                 let mark = marks[Math.floor(Math.random()*marks.length)];
+                 let markArr = mark.split('');
+                 for (let j = 1; j < markArr.length; j += 2) {
+                     markArr[j] += zw[Math.floor(Math.random()*zw.length)];
+                 }
+                 arr.push(markArr.join(''));
+             }
+             for (let i = 0; i < 5; i++) arr.push(zw[Math.floor(Math.random()*zw.length)]);
+             return arr.sort(() => Math.random()-0.5).join('');
+         }
+         var lines = text.split('\n');
+         for (let i = 0; i < lines.length; i++) {
+             lines[i] += garble(lines[i]);
+         }
+         var newText = lines.join('\n');
+         if (e.clipboardData) {
+             e.clipboardData.setData('text/plain', newText);
+         } else if (window.clipboardData) {
+             window.clipboardData.setData('Text', newText);
+         }
+         e.preventDefault();
+     });
+     </script>
 </head>
 <body>
     <div class="container">
@@ -636,17 +700,14 @@
             async function fetchMd(filePath) {
                 const full = utils.joinPath('旅游', filePath);
                 if (cache.mdContent[full]) {
-                    // 始终返回解码后的内容
-                    return WatermarkObfuscator.removeWatermark(cache.mdContent[full]);
+                    return cache.mdContent[full];
                 }
                 try {
                     const r = await fetch(full);
                     if (!r.ok) return '';
                     let t = await r.text();
-                    // 首次获取时注入水印和混淆
-                    t = WatermarkObfuscator.injectWatermark(t);
                     cache.mdContent[full] = t;
-                    return WatermarkObfuscator.removeWatermark(t);
+                    return t;
                 } catch {
                     return '';
                 }
@@ -1422,41 +1483,5 @@
             initApp();
         })();
     </script>
-    <!-- 监听复制事件，自动插入零宽字符水印 -->
-    <!-- 
-    <script>
-    document.addEventListener('copy', function(e) {
-        // 判断复制区域是否在 markdown-content
-        const selection = window.getSelection();
-        if (!selection || selection.isCollapsed) return;
-        const container = document.querySelector('.markdown-content');
-        if (!container) return;
-        // 判断选区是否在 markdown-content 内部
-        let inMarkdown = false;
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            if (container.contains(range.commonAncestorContainer)) {
-                inMarkdown = true;
-            }
-        }
-        if (!inMarkdown) return;
-
-        // 获取选中的文本
-        let text = selection.toString();
-        if (!text) return;
-
-        // 插入水印
-        const watermarked = WatermarkObfuscator.injectWatermark(text);
-
-        // 设置剪贴板内容
-        e.preventDefault();
-        if (e.clipboardData) {
-            e.clipboardData.setData('text/plain', watermarked);
-        } else if (window.clipboardData) {
-            window.clipboardData.setData('Text', watermarked);
-        }
-    });
-    </script>
-    -->
 </body>
 </html>

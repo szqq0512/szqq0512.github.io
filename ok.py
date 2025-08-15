@@ -27,15 +27,8 @@ RE_DATE_RANGE = re.compile(
     r'((?:\d{1,4}年)?(?:\d{1,2}月)?(?:\d{1,2}日?)?)'
 )
 
-# 保护区域正则（HTML链接、HTML实体、Markdown链接、图片链接、代码块）
-PROTECT_PATTERN = re.compile(
-    r'(<a\b[^>]*>.*?</a>)'                 # HTML 链接
-    r'|(&[a-zA-Z0-9#]+;)'                   # HTML 实体
-    r'|(\[[^\]]+\]\([^)]+\))'           # Markdown 链接
-    r'|(!\[[^\]]*\]\([^)]+\))'          # Markdown 图片链接
-    r'|(```[\s\S]*?```)'                  # Markdown 代码块（多行）
-    , re.DOTALL
-)
+# 保护区域正则（HTML链接和 HTML 实体）
+PROTECT_PATTERN = re.compile(r'(<a\b[^>]*>.*?</a>)|(&[a-zA-Z0-9#]+;)|(\[[^\]]+\]\([^)]+\))')
 
 # 标点映射（中文转半角及反向转换）
 PUNCT_FULL_TO_HALF = {
