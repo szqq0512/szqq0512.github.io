@@ -1,15 +1,16 @@
 import os
 import re
+import datetime
 from typing import List
 
 # ---------------- 全局常量和预编译正则 ----------------
 
 # 全角转半角映射表（仅针对英文、数字及指定符号）
 FULLWIDTH_TO_HALFWIDTH = str.maketrans({
-    'Ａ': 'A', 'Ｂ': 'B', 'Ｃ': 'C', 'Ｄ': 'D', 'Ｅ': 'E', 'Ｆ': 'F', 'Ｇ': 'G', 'Ｈ': 'H', 'Ｉ': 'I',
-    'Ｊ': 'J', 'Ｋ': 'K', 'Ｌ': 'L', 'Ｍ': 'M', 'Ｎ': 'N', 'Ｏ': 'O', 'Ｐ': 'P', 'Ｑ': 'Q', 'Ｒ': 'R',
-    'Ｓ': 'S', 'Ｔ': 'T', 'Ｕ': 'U', 'Ｖ': 'V', 'Ｗ': 'W', 'Ｘ': 'X', 'Ｙ': 'Y', 'Ｚ': 'Z',
-    'ａ': 'a', 'ｂ': 'b', 'ｃ': 'c', 'ｄ': 'd', 'ｅ': 'e', 'ｆ': 'f', 'ｇ': 'g', 'ｈ': 'h', 'ｉ': 'i',
+    'Ａ': 'A', 'Ｂ': 'B', 'Ｃ': 'C', 'Ｄ': 'D', 'Ｅ': 'E', 'Ｆ': 'F', 'Ｇ': 'G', 'Ｈ': 'H',
+    'Ｉ': 'I', 'Ｊ': 'J', 'Ｋ': 'K', 'Ｌ': 'L', 'Ｍ': 'M', 'Ｎ': 'N', 'Ｏ': 'O', 'Ｐ': 'P', 'Ｑ': 'Q', 'Ｒ': 'R',
+    'Ｓ': 'S', 'Ｔ': 'T', 'Ｕ': 'U', 'Ｖ': 'V', 'Ｗ': 'W', 'Ｘ': 'X', 'Ｙ': 'Y', 'Ｚ': 'Z',  # 添加全角Z
+    'ａ': 'a', 'ｂ': 'b', 'ｃ': 'c', 'ｄ': 'd', 'ｅ': 'e', 'ｆ': 'f', 'ｇ': 'g', 'ｈ': 'h', 'ｉ': 'i',  # 添加全角f
     'ｊ': 'j', 'ｋ': 'k', 'ｌ': 'l', 'ｍ': 'm', 'ｎ': 'n', 'ｏ': 'o', 'ｐ': 'p', 'ｑ': 'q', 'ｒ': 'r',
     'ｓ': 's', 'ｔ': 't', 'ｕ': 'u', 'ｖ': 'v', 'ｗ': 'w', 'ｘ': 'x', 'ｙ': 'y', 'ｚ': 'z',
     '０': '0', '１': '1', '２': '2', '３': '3', '４': '4', '５': '5', '６': '6', '７': '7', '８': '8', '９': '9',
@@ -17,8 +18,8 @@ FULLWIDTH_TO_HALFWIDTH = str.maketrans({
 })
 
 # 连接符规则，包含 -、--、—、一 及与空格组合
-RANGE_CONNECTOR = r'(?:\s*(?:[-一—–]{1,2})\s*)'
-PHONE_CONNECTOR = r'(?:\s*[-一—–]{1,2}\s*)'
+RANGE_CONNECTOR = r'(?:\s*(?:[-一—–－]{1,2})\s*)'
+PHONE_CONNECTOR = r'(?:\s*[-一—–－]{1,2}\s*)'
 
 # 日期范围预编译
 RE_DATE_RANGE = re.compile(
@@ -27,8 +28,15 @@ RE_DATE_RANGE = re.compile(
     r'((?:\d{1,4}年)?(?:\d{1,2}月)?(?:\d{1,2}日?)?)'
 )
 
-# 保护区域正则（HTML链接和 HTML 实体）
-PROTECT_PATTERN = re.compile(r'(<a\b[^>]*>.*?</a>)|(&[a-zA-Z0-9#]+;)|(\[[^\]]+\]\([^)]+\))')
+# 保护区域正则（HTML链接、HTML实体、Markdown链接、图片链接、代码块）
+PROTECT_PATTERN = re.compile(
+    r'(<a\b[^>]*>.*?</a>)'                 # HTML 链接
+    r'|(&[a-zA-Z0-9#]+;)'                   # HTML 实体
+    r'|(\[[^\]]+\]\([^)]+\))'           # Markdown 链接
+    r'|(!\[[^\]]*\]\([^)]+\))'          # Markdown 图片链接
+    r'|(```[\s\S]*?```)'                  # Markdown 代码块（多行）
+    , re.DOTALL
+)
 
 # 标点映射（中文转半角及反向转换）
 PUNCT_FULL_TO_HALF = {
@@ -38,31 +46,85 @@ PUNCT_FULL_TO_HALF = {
 }
 PUNCT_HALF_TO_FULL = {v: k for k, v in PUNCT_FULL_TO_HALF.items()}
 
+# 时间戳相关常量
+TIMESTAMP_PATTERN = re.compile(r'<!-- Last processed: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) -->')
+TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S'
+
 # ---------------- 处理文件和行 ----------------
 
-def process_markdown_files(root_dir: str):
+def process_markdown_files(root_dir: str, mode: int = 1):
     """处理当前目录及子目录下所有 Markdown 文件"""
     for root, _, files in os.walk(root_dir):
         for file in files:
             if file.endswith('.md'):
                 file_path = os.path.join(root, file)
                 try:
-                    print(f"正在处理: {file_path}")
-                    process_file(file_path)
-                    print(f"处理成功: {file_path}")
+                    if should_process_file(file_path, mode):
+                        print(f"正在处理: {file_path}")
+                        process_file(file_path)
+                        print(f"处理成功: {file_path}")
+                    else:
+                        print(f"跳过处理（时间戳匹配）: {file_path}")
                 except Exception as e:
                     print(f"处理失败: {file_path}\n错误信息: {e}")
 
+def should_process_file(file_path: str, mode: int) -> bool:
+    """根据处理模式判断是否需要处理文件"""
+    if mode == 2:  # 处理全部文件
+        return True
+    
+    # 模式1：只处理时间不匹配的文件
+    try:
+        # 获取文件修改时间（精确到秒）
+        file_mtime = datetime.datetime.fromtimestamp(
+            os.path.getmtime(file_path)
+        ).replace(microsecond=0)
+        
+        # 读取文件最后一行检查时间戳
+        with open(file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        if lines and lines[-1].startswith('<!-- Last processed: '):
+            last_line = lines[-1].strip()
+            match = TIMESTAMP_PATTERN.search(last_line)
+            if match:
+                timestamp_str = match.group(1)
+                timestamp = datetime.datetime.strptime(timestamp_str, TIMESTAMP_FORMAT)
+                return file_mtime != timestamp
+    
+    except Exception:
+        pass  # 如果读取失败，按需要处理
+    
+    return True  # 默认需要处理
+
 def process_file(file_path: str):
-    """处理单个 Markdown 文件"""
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.readlines()
+    """处理单个Markdown文件（优化版：时间戳相同则完全跳过处理）"""
+    try:
+        # 读取文件内容
+        with open(file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        # 移除原有时间戳（如果存在）
+        if lines and lines[-1].startswith('<!-- Last processed: '):
+            lines = lines[:-1]
+        
+        # 处理内容
+        processed_lines = [process_line(line) for line in lines]
+        processed_lines = process_consecutive_empty_lines(processed_lines)
+        
+        # 添加新时间戳
+        current_time = datetime.datetime.now().replace(microsecond=0)
+        timestamp_line = f'<!-- Last processed: {current_time.strftime(TIMESTAMP_FORMAT)} -->\n'
+        processed_lines.append(timestamp_line)
+        
+        # 写回文件
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.writelines(processed_lines)
+        
+        print(f"成功处理并更新时间戳：{file_path}")
     
-    processed_lines = [process_line(line) for line in content]
-    processed_lines = process_consecutive_empty_lines(processed_lines)
-    
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.writelines(processed_lines)
+    except Exception as e:
+        print(f"处理失败: {file_path}\n错误信息: {e}")
 
 def process_line(line: str) -> str:
     """
@@ -107,6 +169,7 @@ def apply_all_rules(line: str, skip_trailing: bool = False) -> str:
     line = rule9_date_range(line)
     line = rule10_phone_number(line)
     line = rule11_heading_spaces(line)
+
     if not skip_trailing:
         line = rule12_trailing_spaces(line)
     line = rule13_convert_punctuation(line)
@@ -114,8 +177,8 @@ def apply_all_rules(line: str, skip_trailing: bool = False) -> str:
 
 def final_quote_cleanup(line: str) -> str:
     """
-    对整行文本做一次后处理：删除开引号（“、‘）后面紧跟中文前的空格，
-    删除中文后紧跟闭引号（”、’）前的空格。
+    对整行文本做一次后处理：删除开引号（"、"）后面紧跟中文前的空格，
+    删除中文后紧跟闭引号（"、"）前的空格。
     """
     line = re.sub(r'([“‘])\s+(?=[\u4e00-\u9fff])', r'\1', line)
     line = re.sub(r'(?<=[\u4e00-\u9fff])\s+([”’])', r'\1', line)
@@ -128,8 +191,9 @@ def rule1_fullwidth_to_halfwidth(line: str) -> str:
     return line.translate(FULLWIDTH_TO_HALFWIDTH)
 
 def rule2_remove_punctuation_between_quotes(line: str) -> str:
-    """规则2: 删除右书名号与左书名号之间的顿号、逗号和空格"""
-    return re.sub(r'([》>])([、，\s]+)([《<])', r'\1\3', line)
+    """规则2: 删除右书名号/右引号与左书名号/左引号之间的顿号、逗号和空格"""
+    # 匹配右符号（》>”"） + 顿号/逗号/空格 + 左符号（《<“"）
+    return re.sub(r'([》>”"])([、，\s]+)([《<“"])', r'\1\3', line)
 
 def rule3_remove_spaces(line: str) -> str:
     """规则3: 删除多余空格，分步骤处理"""
@@ -143,11 +207,11 @@ def rule3_remove_spaces(line: str) -> str:
         line = line.replace('  ', ' ')
 
     # 删除指定标点前的空格
-    punct_before = '#*<-—!&：:。.；;，,？?！)）》>”"《、（(“'
+    punct_before = '%#*<-—!&：:。.；;，,？?！)）》>”"《、（(“'
     line = re.sub(r'([\s　]+)([' + re.escape(punct_before) + r'])', r'\2', line)
     
     # 删除指定标点后面的空格
-    punct_after = '-—。.”:：（(《<“'
+    punct_after = ',;!?，；！？$-—。.”:：（(《<“'
     line = re.sub(r'([' + re.escape(punct_after) + r'])([\s　]+)', r'\1', line)
 
     # 处理行首格式
@@ -205,11 +269,11 @@ def rule4_punctuation_in_english(line: str) -> str:
 
 def rule5_punctuation_in_numbers(line: str) -> str:
     """
-    规则5: 如果一行仅由数字和标点构成，则删除空白后，
+    规则5: 如果一行仅由数字和标点构成，则删除空格后，
     内部（数字间）的标点统一转换为半角，但行尾（最后一个字符）若为标点，
     则转换为全角（依据映射表），以满足数字行末尾用全角的要求。
     """
-    allowed_punct = set(list(',.!?;:\'"()[]{}<>‘’“”，。；：！？'))
+    allowed_punct = set(list(',.!?;:\'"()[]{}<>‘’“”’，。；：！？'))
     if all(ch.isdigit() or ch in allowed_punct or ch.isspace() for ch in line if ch != '\n'):
         line = re.sub(r'\s+', '', line)
         new_chars = []
@@ -230,7 +294,6 @@ def rule6_chinese_punctuation(line: str) -> str:
     if not contains_chinese(line):
         return line
 
-
     # 将常见标点转换为全角
     punct_map = {
         ',': '，', '.': '。', ';': '；', ':': '：',
@@ -245,15 +308,19 @@ def rule6_chinese_punctuation(line: str) -> str:
     # 中文字符之间的连接符统一为—（两边无空格）
     line = re.sub(r'([\u4e00-\u9fff])[-－—]+([\u4e00-\u9fff])', r'\1—\2', line)
 
-    # 数字或英文之间的标点（逗号、句号、分号、冒号）若为全角则转换为半角
-    pattern = r'([A-Za-z0-9]+)([，。；：])([A-Za-z0-9]+)'
+    # 数字或英文之间的标点（逗号、句号、分号、冒号、问号、感叹号）若为全角则转换为半角
+    pattern = r'([A-Za-z0-9]+)([，。；：！？])([A-Za-z0-9]+)'
     while re.search(pattern, line):
         line = re.sub(pattern, lambda m: f"{m.group(1)}{PUNCT_FULL_TO_HALF.get(m.group(2), m.group(2))}{m.group(3)}", line)
-
+    
+    # 规则2：英文之间的顿号改为半角逗号
+    pattern2 = r'([A-Za-z]+)(、)([A-Za-z]+)'
+    line = re.sub(pattern2, r'\1,\3', line)
+    
     # 调整引号配对：第一个遇到的引号为左引号，第二个为右引号，以此循环
     line = fix_quotes(line)
 
-    # 括号、引号、书名号内内容若不含中文，则内部标点替换为半角
+    # 括号、引号、书名号内内容若不含中文，则内部标点替换为半角并删除标点后空格。
     line = process_punctuation_in_brackets(line)
 
     # 连续三点或更多点统一替换为“……”
@@ -288,32 +355,53 @@ def rule6_chinese_punctuation(line: str) -> str:
     return line
 
 def rule7_time_format(line: str) -> str:
-    """规则7: 处理时间格式为 HH:MM（补零），并统一时间范围连接符为—"""
+    """规则7: 处理时间格式为 HH:MM（补零），并统一时间范围连接符为中横线（–）"""
     line = re.sub(r'(\d{1,2}):(00|15|30|45)', lambda m: f"{int(m.group(1)):02d}:{m.group(2)}", line)
-    line = re.sub(r'(\d{2}:\d{2})\s*[-一—–]+\s*(\d{2}:\d{2})', r'\1—\2', line)
+    line = re.sub(r'(\d{2}:\d{2})\s*[-一—–－]+\s*(\d{2}:\d{2})', r'\1–\2', line)
     return line
 
 def rule8_number_range(line: str) -> str:
-    """规则8: 数字范围处理，若两数字位数相同，则统一连接符为—"""
+    """规则8: 数字范围处理，若两数字位数相同，则统一连接符为–"""
     def repl(match):
         num1, conn, num2 = match.group(1), match.group(2), match.group(3)
-        return f"{num1}—{num2}" if len(num1) == len(num2) else match.group(0)
+        return f"{num1}–{num2}" if len(num1) == len(num2) else match.group(0)
     line = re.sub(r'(\d+)\s*([-－—])\s*(\d+)', repl, line)
+
+    # 规则3：处理英文与半角标点间的空格
+    # 1. 英文+半角标点（逗号、句号、冒号、分号、问号、感叹号）后加空格
+    # 2. 半角标点（逗号、句号、冒号、分号、问号、感叹号）+英文，在标点后加空格
+    # 3. 英文+半角标点（引号、左括号），在标点前加空格
+    pattern3_1 = r'([A-Za-z])([,.:;?!])(?!\s)'  # 场景1
+    pattern3_2 = r'([,.:;?!])([A-Za-z])(?<!\s)'  # 场景2
+    pattern3_3 = r'([A-Za-z])(["\(])(?<!\s)'     # 场景3
+    line = re.sub(pattern3_1, r'\1\2 ', line)
+    line = re.sub(pattern3_2, r'\1 \2', line)
+    line = re.sub(pattern3_3, r'\1 \2', line)
+
+    # 规则4：删除两个半角句号之间的空格
+    pattern4 = r'(\.)\s+(\.)'
+    line = re.sub(pattern4, r'\1\2', line)
+
+    # 新规则：删除括号和引号内任意标点符号后的空格
+    line = re.sub(r'([\(（"\'“‘])([^\)）"\'”’]*?)([\)）"\'”’])',
+                 lambda m: m.group(1) + re.sub(r'([.,!?;:，。！？；：])\s+', r'\1', m.group(2)) + m.group(3),
+                 line)
+
     return line
 
 def rule9_date_range(line: str) -> str:
-    """规则9: 日期范围处理，统一连接符为—"""
+    """规则9: 日期范围处理，统一连接符为–"""
     def repl(m):
         part1 = m.group(1).strip()
         part2 = m.group(2).strip()
         if part1 and part2:
-            return f"{part1}—{part2}"
+            return f"{part1}–{part2}"
         return m.group(0)
     return RE_DATE_RANGE.sub(repl, line)
 
 def rule10_phone_number(line: str) -> str:
     """规则10: 电话号码格式化，区号与主号码间统一使用短横线 -（两边无空格）"""
-    return re.sub(r'(0\d{2,3})\s*[-一—–]+\s*(\d{7,8})', r'\1–\2', line)
+    return re.sub(r'(0\d{2,3})\s*[-一—–－]+\s*(\d{7,8})', r'\1–\2', line)
 
 def rule11_heading_spaces(line: str) -> str:
     """规则11: 行首标题（#级）后保留一个半角空格，其余空格删除"""
@@ -400,32 +488,43 @@ def fix_quotes(line: str) -> str:
     return ''.join(result)
 
 def process_punctuation_in_brackets(line: str) -> str:
-    """
-    处理括号、引号、书名号内非中文内容的标点替换为半角，
-    同时保持括号、引号、书名号本身不变。
-    """
+    """处理括号、引号、书名号内的标点符号：若不含中文，则将内部标点替换为半角并删除标点后的空格"""
     bracket_pairs = [
         ('（', '）'), ('(', ')'),
         ('“', '”'), ('"', '"'),
         ('《', '》'), ('<', '>')
     ]
+    
     for left, right in bracket_pairs:
         pattern = re.compile(f'{re.escape(left)}(.*?){re.escape(right)}')
+        
         def replacer(m):
             content = m.group(1)
             if not contains_chinese(content):
+                # 先将全角标点替换为半角
                 for full, half in PUNCT_FULL_TO_HALF.items():
                     content = content.replace(full, half)
+                # 删除半角标点后的空格
+                content = re.sub(r'([,.!:;?])(\s+)', r'\1', content)
             return f"{left}{content}{right}"
+        
         line = pattern.sub(replacer, line)
+    
     return line
-
-
-
 
 # ---------------- 主入口 ----------------
 
 if __name__ == '__main__':
+    print("请选择处理模式：")
+    print("1. 只处理时间不匹配的md文件")
+    print("2. 处理全部md文件")
+    choice = input("请输入选项（1或2）: ")
+    
+    if choice not in ['1', '2']:
+        print("输入错误，程序退出。")
+        exit()
+    
+    mode = int(choice)
     current_dir = os.getcwd()
-    process_markdown_files(current_dir)
+    process_markdown_files(current_dir, mode)
     print("Markdown 文件处理完成！")

@@ -6,4 +6,5 @@
 交通信息：位于澳门氹仔望德圣母湾大马路澳门威尼斯人金光会展中心。  
 电话：28828818  
 网址：<a href="http://tc.sandsresortsmacao.com/macau-shows/teamlab.html" target="_blank">tc.sandsresortsmacao.com/macau-shows/teamlab.html</a>  
-<!-- Last processed: 2025-07-22 03:44:27 -->
+<!--Last processed: 2025–07-2203:44:27-->  
+<!-- Last processed: 2026-03-09 23:48:30 -->
