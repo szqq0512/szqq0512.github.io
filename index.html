@@ -71,7 +71,29 @@
             text-decoration: none;
         }
         .sidebar-header .toggle-btn { 
-            display: none; 
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #fff;
+        }
+        .sidebar.collapsed {
+            width: 56px;
+            min-width: 56px;
+        }
+        .sidebar.collapsed .sidebar-header h2 { display: none; }
+        .sidebar.collapsed .search-bar,
+        .sidebar.collapsed .search-no-result,
+        .sidebar.collapsed .tree-view {
+            display: none;
+        }
+        .sidebar.collapsed .sidebar-header {
+            justify-content: flex-end;
+            padding-right: 12px;
         }
         .search-bar {
             display: flex;
@@ -268,24 +290,71 @@
 
         @media (max-width: 992px) {
             .container { width: 100%; flex-direction: column; padding: 0; margin: 0; gap: 0; }
-            .sidebar { width: 100%; border-radius: 0; max-height: 50vh; border-bottom: 1px solid var(--border); }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 84%;
+                max-width: 320px;
+                border-radius: 0;
+                max-height: none;
+                transform: translateX(-100%);
+                transition: transform .25s ease;
+                z-index: 115;
+                border-right: 1px solid var(--border);
+                background: #fff;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .sidebar.collapsed {
+                width: 84%;
+                min-width: auto;
+            }
+            .sidebar.collapsed .sidebar-header h2 { display: block; }
             .sidebar.collapsed .search-bar,
             .sidebar.collapsed .search-no-result,
-            .sidebar.collapsed .tree-view { 
-                display: none; 
-            } 
-            .sidebar.collapsed { overflow: hidden; max-height: 60px; }
-            .sidebar-header .toggle-btn { 
-                display: block;
-            }
-            .content { border-radius: 0; }
+            .sidebar.collapsed .tree-view { display: block; }
+            .sidebar-header .toggle-btn { display: flex; }
+            .sidebar-open-btn { display: flex !important; }
+            .content { border-radius: 0; margin-top: 0; }
             .markdown-container { padding: 0.8em; padding-bottom: 18vh !important; }
         }
-        .toggle-btn {
-            background: none;
-            border: none;
+        .sidebar-open-btn {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.85);
+            border: 1px solid rgba(224,224,224,0.8);
+            color: var(--text);
+            align-items: center;
+            justify-content: center;
+            z-index: 130;
             cursor: pointer;
-            padding: 6px 10px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+            display: none;
+        }
+        .sidebar-open-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 110;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+        .sidebar.mobile-open + .sidebar-backdrop {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
         }
         .toggle-btn .emoji-icon { font-size: 1.6em; color: #fff; }
         .search-hit {
@@ -467,6 +536,12 @@
 
 </head>
 <body>
+    <button class="sidebar-open-btn" id="mobile-sidebar-toggle" aria-label="打开侧边栏">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.2027 4.90034V6.43655H2.79724V4.90034H17.2027Z" fill="currentColor"></path>
+            <path d="M10.9603 13.0634V14.5996H2.79724V13.0634H10.9603Z" fill="currentColor"></path>
+        </svg>
+    </button>
     <div class="container">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header" id="sidebar-header">
@@ -476,8 +551,10 @@
                         <span>青青小竹网</span>
                     </a>
                 </h2>
-                <button class="toggle-btn" id="toggle-sidebar" data-collapsed="false">
-                    <span class="emoji-icon">▽</span>
+                <button class="toggle-btn" id="toggle-sidebar" data-collapsed="false" aria-expanded="true" aria-label="切换侧边栏">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.5 12L10.5 8L6.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     <span class="sr-only">折叠/展开</span>
                 </button>
             </div>
@@ -498,16 +575,17 @@
             
             <div class="tree-view" id="tree-view"></div>
         </aside>
+        <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
         
         <main class="content" id="content">
             <div class="empty-state" id="welcome-content">
                 <h2>欢迎使用青青小竹网</h2>
                 <br>
-                <p>这是个用AI（DeepSeek、VSCode GPT）制作的个人笔记仓库，使用简单的Markdown语法。</p>  
+                <p>这是个用Markdown语法制作的个人笔记仓库。</p>  
                 <br>
-                <p>主要搜集、整理了中国各地区的概况、景点及特色村寨等相关资料，方便旅行前查找和规划。</p>
+                <p>主要搜集、整理了中国各地区的概况、旅游指南等相关资料，方便旅行前查找和规划。</p>
                 <br>
-                <p>请在菜单中选择要查看的文件</p>
+                <p>请在菜单中选择要查看的目录和文件</p>
                 <br>
                 <img src="https://s1.imagehub.cc/images/2025/06/13/bf3432b185d01be77f7f9f78f3a79dd7.webp" 
                      alt="欢迎使用青青小竹网"
@@ -515,10 +593,10 @@
                      loading="lazy">
                 <br>
                 <p><small>免责声明</small></p>
-                <p><small>本网站（仓库）的所有内容仅供个人参考之用，禁止用于商业用途。</small></p>
-                <p><small>任何人或组织不得将本网站（仓库）的内容用于非法用途或侵犯他人合法权益，不得用于在其他平台进行传播。</small></p>
-                <p><small>对于因使用本网站（仓库）内容而引起的任何法律责任，本网站（仓库）不承担任何责任。</small></p>
-                <p><small>使用本网站（仓库）的内容即表示您同意本免责声明的所有条款和条件。</small></p>
+                <p><small>本站（仓库）的所有内容仅供个人参考之用，禁止用于商业用途。</small></p>
+                <p><small>任何人或组织不得将本站（仓库）的内容用于非法用途或侵犯他人合法权益，不得用于在其他平台进行传播。</small></p>
+                <p><small>对于因使用本站（仓库）内容而引起的任何法律责任，本站（仓库）不承担任何责任。</small></p>
+                <p><small>使用本站（仓库）的内容即表示您同意本免责声明的所有条款和条件。</small></p>
             </div>
         </main>
     </div>
@@ -527,27 +605,12 @@
 
     <script>
         (() => {
-            // 移动端搜索时自动展开侧边栏
-            function expandSidebarIfNeeded() {
-                if (window.innerWidth <= 992 && $.sidebar.classList.contains('collapsed')) {
-                    $.sidebar.classList.remove('collapsed');
-                    const icon = $.toggleSidebar.querySelector('.emoji-icon');
-                    if (icon) icon.textContent = '▽';
-                    $.toggleSidebar.setAttribute('data-collapsed', false);
-                }
-            }
-            // 侧边栏折叠/展开切换函数
-            function toggleSidebar() {
-                const collapsed = $.sidebar.classList.toggle('collapsed');
-                const icon = $.toggleSidebar.querySelector('.emoji-icon');
-                if (icon) icon.textContent = collapsed ? '▷' : '▽';
-                $.toggleSidebar.setAttribute('data-collapsed', collapsed);
-            }
-            // DOM 快捷选择器对象
             const $ = {
                 sidebar: document.getElementById('sidebar'),
                 homeLink: document.getElementById('home-link'),
                 toggleSidebar: document.getElementById('toggle-sidebar'),
+                mobileSidebarToggle: document.getElementById('mobile-sidebar-toggle'),
+                sidebarBackdrop: document.getElementById('sidebar-backdrop'),
                 searchType: document.getElementById('search-type'),
                 searchTypeLabel: document.getElementById('search-type-label'),
                 searchTypeDropdown: document.getElementById('search-type-dropdown'),
@@ -559,6 +622,28 @@
                 welcomeContent: document.getElementById('welcome-content'),
                 searchLoading: document.getElementById('search-loading'),
             };
+
+            // 移动端搜索时自动展开侧边栏
+            function expandSidebarIfNeeded() {
+                if (window.innerWidth <= 992 && !$.sidebar.classList.contains('mobile-open')) {
+                    $.sidebar.classList.add('mobile-open');
+                }
+            }
+            // 侧边栏折叠/展开切换函数
+            function toggleSidebar() {
+                if (window.innerWidth <= 992) {
+                    $.sidebar.classList.toggle('mobile-open');
+                    return;
+                }
+                const collapsed = $.sidebar.classList.toggle('collapsed');
+                $.toggleSidebar.setAttribute('data-collapsed', collapsed);
+                $.toggleSidebar.setAttribute('aria-expanded', !collapsed);
+                if (collapsed) {
+                    $.toggleSidebar.querySelector('svg').style.transform = 'rotate(180deg)';
+                } else {
+                    $.toggleSidebar.querySelector('svg').style.transform = 'rotate(0deg)';
+                }
+            }
 
             // 异步加载vx.json
             async function loadVxJson(path) {
@@ -1335,7 +1420,7 @@
             
             $.treeView.onclick = async e => {
                 let f = e.target.closest('.folder'), file = e.target.closest('.file');
-                if (f && window.innerWidth <= 992 && $.sidebar.classList.contains('collapsed')) {
+                if (f && window.innerWidth <= 992 && !$.sidebar.classList.contains('mobile-open')) {
                     expandSidebarIfNeeded();
                 }
                 if ($.searchNoResult.style.display === 'block') {
@@ -1400,6 +1485,12 @@
             };
             
             $.toggleSidebar.onclick = toggleSidebar;
+            $.mobileSidebarToggle.onclick = toggleSidebar;
+            $.sidebarBackdrop.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    $.sidebar.classList.remove('mobile-open');
+                }
+            });
             
             // 搜索类型切换与分流逻辑
             let searchMode = 'menu';
@@ -1477,10 +1568,11 @@
             // 事件监听和初始化
             window.addEventListener('resize', () => {
                 if (window.innerWidth > 992) {
+                    $.sidebar.classList.remove('mobile-open');
                     $.sidebar.classList.remove('collapsed');
-                    const icon = $.toggleSidebar.querySelector('.emoji-icon');
-                    if (icon) icon.textContent = '▽';
                     $.toggleSidebar.setAttribute('data-collapsed', false);
+                    $.toggleSidebar.setAttribute('aria-expanded', true);
+                    $.toggleSidebar.querySelector('svg').style.transform = 'rotate(0deg)';
                 }
             });
             initApp();
