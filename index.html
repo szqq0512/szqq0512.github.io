@@ -203,7 +203,7 @@
             flex-direction: column;
             background: #f9f9f9;
             border-radius: var(--radius);
-            overflow: hidden;
+            overflow-y: auto;
             border: 1px solid var(--border);
         }
         .markdown-container {
@@ -562,14 +562,14 @@
             <div class="search-bar" id="search-bar">
                 <div class="search-type" id="search-type" tabindex="0">
                     <span id="search-type-label">菜单</span>
-                    <span class="dropdown-arrow">▼</span>
+                    <span class="dropdown-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                     <div class="search-type-dropdown" id="search-type-dropdown" style="display:none;">
                         <div data-type="menu">菜单</div>
                         <div data-type="content">内容</div>
                     </div>
                 </div>
                 <input id="search-input" type="text" placeholder="搜索菜单文档..." />
-                <span id="search-clear">╳</span>
+                <span id="search-clear"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </div>
             <div id="search-no-result" class="search-no-result" style="display:none;">无此搜索项</div>
             
@@ -869,7 +869,7 @@
                 h.forEach(he => {
                     let hi = document.createElement('div');
                     hi.className = `heading-item h${he.level}`;
-                    let icon = he.level === 1 ? '› ' : he.level === 2 ? ' &#x20;» ' : he.level === 3 ? ' &#x20;&#x20; »› ' : '';
+                    let icon = he.level === 1 ? '<svg width="4" height="6" viewBox="0 0 4 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L3 3L1 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>' : he.level === 2 ? ' &#x20;<svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L3 3L1 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 1L7 3L5 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>' : he.level === 3 ? ' &#x20; &#x20;<svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L3 3L1 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 1L7 3L5 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 1L11 3L9 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
                     hi.innerHTML = `<span>&#x20;${icon}&#x20;${he.text}</span>`;
                     hi.onclick = e => {
                         e.stopPropagation();
