@@ -1,0 +1,8 @@
+2026-05-18 18:26:37,182 INFO: 准备转换 3 个文件，输出目录: test-music-output2, 并发: 2
+2026-05-18 18:26:37,186 INFO: 提交: test-music\Happy Happy.m4a → test-music\Happy Happy.mp3
+2026-05-18 18:26:37,196 INFO: 提交: test-music\I Want My Tears Back.flac → test-music\I Want My Tears Back.mp3
+2026-05-18 18:26:37,201 INFO: 提交: test-music\1973-Ring Ring\CDImage .flac → test-music\1973-Ring Ring\1973-Ring Ring.mp3
+2026-05-18 18:26:40,334 INFO: ✅ 完成: test-music\Happy Happy.m4a
+2026-05-18 18:26:41,569 INFO: ✅ 完成: test-music\I Want My Tears Back.flac
+2026-05-18 18:27:14,267 INFO: ✅ 完成: test-music\1973-Ring Ring\CDImage .flac
+2026-05-18 18:27:14,277 INFO: 全部任务结束

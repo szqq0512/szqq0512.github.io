@@ -1,0 +1,90 @@
+2026-05-18 18:21:49,351 INFO: 准备转换 44 个文件，输出目录: test-music-output, 并发: 2
+2026-05-18 18:21:49,365 INFO: 提交: test-music\Happy Happy.m4a → test-music\Happy Happy.mp3
+2026-05-18 18:21:49,395 INFO: 提交: test-music\I Want My Tears Back.flac → test-music\I Want My Tears Back.mp3
+2026-05-18 18:21:49,400 INFO: 提交: test-music\Radio Megamix.wav → test-music\Radio Megamix.mp3
+2026-05-18 18:21:49,400 INFO: 提交: test-music\1973-Ring Ring\CDImage .flac → test-music\1973-Ring Ring\1973-Ring Ring.mp3
+2026-05-18 18:21:49,400 INFO: 提交: test-music\CD1\01-生命之曲（林子祥）.ape → test-music\CD1\01-生命之曲（林子祥）.mp3
+2026-05-18 18:21:49,401 INFO: 提交: test-music\CD1\02-不装饰你的梦（蔡国权）.ape → test-music\CD1\02-不装饰你的梦（蔡国权）.mp3
+2026-05-18 18:21:49,401 INFO: 提交: test-music\CD1\03-顺流、逆流（徐晓凤）.ape → test-music\CD1\03-顺流、逆流（徐晓凤）.mp3
+2026-05-18 18:21:49,402 INFO: 提交: test-music\CD1\04-在我生命里（罗文）.ape → test-music\CD1\04-在我生命里（罗文）.mp3
+2026-05-18 18:21:49,402 INFO: 提交: test-music\CD1\05-浪子心声（许冠杰）.ape → test-music\CD1\05-浪子心声（许冠杰）.mp3
+2026-05-18 18:21:49,402 INFO: 提交: test-music\CD1\06-亲密爱人（梅艳芳）.ape → test-music\CD1\06-亲密爱人（梅艳芳）.mp3
+2026-05-18 18:21:49,402 INFO: 提交: test-music\CD1\07-摘下满天星（邓少秋）.ape → test-music\CD1\07-摘下满天星（邓少秋）.mp3
+2026-05-18 18:21:49,402 INFO: 提交: test-music\CD1\08-我爱你一天（吕芳）.ape → test-music\CD1\08-我爱你一天（吕芳）.mp3
+2026-05-18 18:21:49,403 INFO: 提交: test-music\CD1\09-上海滩（叶丽仪）.ape → test-music\CD1\09-上海滩（叶丽仪）.mp3
+2026-05-18 18:21:49,403 INFO: 提交: test-music\CD1\10-随缘（温兆伦）.ape → test-music\CD1\10-随缘（温兆伦）.mp3
+2026-05-18 18:21:49,403 INFO: 提交: test-music\CD1\11-万水千山总是情（汪明荃）.ape → test-music\CD1\11-万水千山总是情（汪明荃）.mp3
+2026-05-18 18:21:49,403 INFO: 提交: test-music\CD1\12-天长地久（周启生）.ape → test-music\CD1\12-天长地久（周启生）.mp3
+2026-05-18 18:21:49,403 INFO: 提交: test-music\CD1\13-一天一点爱恋（梁朝伟）.ape → test-music\CD1\13-一天一点爱恋（梁朝伟）.mp3
+2026-05-18 18:21:49,404 INFO: 提交: test-music\CD1\14-秋来秋去（叶倩文）.ape → test-music\CD1\14-秋来秋去（叶倩文）.mp3
+2026-05-18 18:21:49,404 INFO: 提交: test-music\CD1\15-让一切随风（钟镇涛）.ape → test-music\CD1\15-让一切随风（钟镇涛）.mp3
+2026-05-18 18:21:49,404 INFO: 提交: test-music\CD1\16-石头记（达明一派）.ape → test-music\CD1\16-石头记（达明一派）.mp3
+2026-05-18 18:21:49,404 INFO: 提交: test-music\CD1\17-是缘是债是场梦（刘锡明）.ape → test-music\CD1\17-是缘是债是场梦（刘锡明）.mp3
+2026-05-18 18:21:49,404 INFO: 提交: test-music\CD1\18-缘分的天空（汤宝如）.ape → test-music\CD1\18-缘分的天空（汤宝如）.mp3
+2026-05-18 18:21:49,405 INFO: 提交: test-music\CD1\19-千载不变（温拿）.ape → test-music\CD1\19-千载不变（温拿）.mp3
+2026-05-18 18:21:49,405 INFO: 提交: test-music\CD1\20-现代爱情故事（张智霖-许秋怡）.ape → test-music\CD1\20-现代爱情故事（张智霖-许秋怡）.mp3
+2026-05-18 18:21:49,405 INFO: 提交: test-music\CD2\01-爱在深秋（谭咏麟）.ape → test-music\CD2\01-爱在深秋（谭咏麟）.mp3
+2026-05-18 18:21:49,405 INFO: 提交: test-music\CD2\02-堆积情感（邓美云）.ape → test-music\CD2\02-堆积情感（邓美云）.mp3
+2026-05-18 18:21:49,405 INFO: 提交: test-music\CD2\03-遥远的她（张学友）.ape → test-music\CD2\03-遥远的她（张学友）.mp3
+2026-05-18 18:21:49,406 INFO: 提交: test-music\CD2\04-千千阙歌（陈慧娴）.ape → test-music\CD2\04-千千阙歌（陈慧娴）.mp3
+2026-05-18 18:21:49,406 INFO: 提交: test-music\CD2\05-偏偏喜欢你（陈百强）.ape → test-music\CD2\05-偏偏喜欢你（陈百强）.mp3
+2026-05-18 18:21:49,406 INFO: 提交: test-music\CD2\06-爱上一个不回家的人（林忆莲）.ape → test-music\CD2\06-爱上一个不回家的人（林忆莲）.mp3
+2026-05-18 18:21:49,406 INFO: 提交: test-music\CD2\07-一生不变（李克勤）.ape → test-music\CD2\07-一生不变（李克勤）.mp3
+2026-05-18 18:21:49,406 INFO: 提交: test-music\CD2\08-一起走过的日子（刘德华）.ape → test-music\CD2\08-一起走过的日子（刘德华）.mp3
+2026-05-18 18:21:49,407 INFO: 提交: test-music\CD2\09-难得有情人（关淑怡）.ape → test-music\CD2\09-难得有情人（关淑怡）.mp3
+2026-05-18 18:21:49,407 INFO: 提交: test-music\CD2\10-风继续吹（张国荣）.ape → test-music\CD2\10-风继续吹（张国荣）.mp3
+2026-05-18 18:21:49,407 INFO: 提交: test-music\CD2\11-伤感的恋人（黄凯芹）.ape → test-music\CD2\11-伤感的恋人（黄凯芹）.mp3
+2026-05-18 18:21:49,407 INFO: 提交: test-music\CD2\12-一人有一个梦想（黎瑞恩）.ape → test-music\CD2\12-一人有一个梦想（黎瑞恩）.mp3
+2026-05-18 18:21:49,407 INFO: 提交: test-music\CD2\13-真的爱你（别安）.ape → test-music\CD2\13-真的爱你（别安）.mp3
+2026-05-18 18:21:49,408 INFO: 提交: test-music\CD2\14-全人类高歌（太極）.ape → test-music\CD2\14-全人类高歌（太極）.mp3
+2026-05-18 18:21:49,408 INFO: 提交: test-music\CD2\15-失恋（草蜢）.ape → test-music\CD2\15-失恋（草蜢）.mp3
+2026-05-18 18:21:49,408 INFO: 提交: test-music\CD2\16-痴心换情深（周慧敏）.ape → test-music\CD2\16-痴心换情深（周慧敏）.mp3
+2026-05-18 18:21:49,408 INFO: 提交: test-music\CD2\17-再见也是朋友（何婉盈-曾航生）.ape → test-music\CD2\17-再见也是朋友（何婉盈-曾航生）.mp3
+2026-05-18 18:21:49,409 INFO: 提交: test-music\CD2\18-我和春天有个约会（刘雅丽）.ape → test-music\CD2\18-我和春天有个约会（刘雅丽）.mp3
+2026-05-18 18:21:49,409 INFO: 提交: test-music\CD2\19-今夜你会不会来（黎明）.ape → test-music\CD2\19-今夜你会不会来（黎明）.mp3
+2026-05-18 18:21:49,409 INFO: 提交: test-music\CD2\20-我是不是该安静的走开（郭富城）.ape → test-music\CD2\20-我是不是该安静的走开（郭富城）.mp3
+2026-05-18 18:21:52,998 INFO: ✅ 完成: test-music\Happy Happy.m4a
+2026-05-18 18:21:54,228 INFO: ✅ 完成: test-music\I Want My Tears Back.flac
+2026-05-18 18:21:57,656 INFO: ✅ 完成: test-music\Radio Megamix.wav
+2026-05-18 18:22:00,675 INFO: ✅ 完成: test-music\CD1\01-生命之曲（林子祥）.ape
+2026-05-18 18:22:03,703 INFO: ✅ 完成: test-music\CD1\02-不装饰你的梦（蔡国权）.ape
+2026-05-18 18:22:06,715 INFO: ✅ 完成: test-music\CD1\03-顺流、逆流（徐晓凤）.ape
+2026-05-18 18:22:08,738 INFO: ✅ 完成: test-music\CD1\04-在我生命里（罗文）.ape
+2026-05-18 18:22:10,761 INFO: ✅ 完成: test-music\CD1\05-浪子心声（许冠杰）.ape
+2026-05-18 18:22:14,799 INFO: ✅ 完成: test-music\CD1\06-亲密爱人（梅艳芳）.ape
+2026-05-18 18:22:18,627 INFO: ✅ 完成: test-music\CD1\07-摘下满天星（邓少秋）.ape
+2026-05-18 18:22:21,649 INFO: ✅ 完成: test-music\CD1\08-我爱你一天（吕芳）.ape
+2026-05-18 18:22:23,674 INFO: ✅ 完成: test-music\CD1\09-上海滩（叶丽仪）.ape
+2026-05-18 18:22:26,695 INFO: ✅ 完成: test-music\CD1\10-随缘（温兆伦）.ape
+2026-05-18 18:22:28,709 INFO: ✅ 完成: test-music\CD1\11-万水千山总是情（汪明荃）.ape
+2026-05-18 18:22:29,779 INFO: ✅ 完成: test-music\1973-Ring Ring\CDImage .flac
+2026-05-18 18:22:31,751 INFO: ✅ 完成: test-music\CD1\12-天长地久（周启生）.ape
+2026-05-18 18:22:32,816 INFO: ✅ 完成: test-music\CD1\13-一天一点爱恋（梁朝伟）.ape
+2026-05-18 18:22:34,766 INFO: ✅ 完成: test-music\CD1\14-秋来秋去（叶倩文）.ape
+2026-05-18 18:22:36,347 INFO: ✅ 完成: test-music\CD1\15-让一切随风（钟镇涛）.ape
+2026-05-18 18:22:37,802 INFO: ✅ 完成: test-music\CD1\16-石头记（达明一派）.ape
+2026-05-18 18:22:39,375 INFO: ✅ 完成: test-music\CD1\17-是缘是债是场梦（刘锡明）.ape
+2026-05-18 18:22:41,905 INFO: ✅ 完成: test-music\CD1\18-缘分的天空（汤宝如）.ape
+2026-05-18 18:22:42,553 INFO: ✅ 完成: test-music\CD1\19-千载不变（温拿）.ape
+2026-05-18 18:22:44,935 INFO: ✅ 完成: test-music\CD1\20-现代爱情故事（张智霖-许秋怡）.ape
+2026-05-18 18:22:45,585 INFO: ✅ 完成: test-music\CD2\01-爱在深秋（谭咏麟）.ape
+2026-05-18 18:22:47,955 INFO: ✅ 完成: test-music\CD2\02-堆积情感（邓美云）.ape
+2026-05-18 18:22:48,614 INFO: ✅ 完成: test-music\CD2\03-遥远的她（张学友）.ape
+2026-05-18 18:22:50,982 INFO: ✅ 完成: test-music\CD2\04-千千阙歌（陈慧娴）.ape
+2026-05-18 18:22:51,634 INFO: ✅ 完成: test-music\CD2\05-偏偏喜欢你（陈百强）.ape
+2026-05-18 18:22:54,004 INFO: ✅ 完成: test-music\CD2\06-爱上一个不回家的人（林忆莲）.ape
+2026-05-18 18:22:54,664 INFO: ✅ 完成: test-music\CD2\07-一生不变（李克勤）.ape
+2026-05-18 18:22:57,031 INFO: ✅ 完成: test-music\CD2\08-一起走过的日子（刘德华）.ape
+2026-05-18 18:22:57,949 INFO: ✅ 完成: test-music\CD2\09-难得有情人（关淑怡）.ape
+2026-05-18 18:23:01,074 INFO: ✅ 完成: test-music\CD2\10-风继续吹（张国荣）.ape
+2026-05-18 18:23:01,351 INFO: ✅ 完成: test-music\CD2\11-伤感的恋人（黄凯芹）.ape
+2026-05-18 18:23:04,097 INFO: ✅ 完成: test-music\CD2\12-一人有一个梦想（黎瑞恩）.ape
+2026-05-18 18:23:05,207 INFO: ✅ 完成: test-music\CD2\13-真的爱你（别安）.ape
+2026-05-18 18:23:07,116 INFO: ✅ 完成: test-music\CD2\14-全人类高歌（太極）.ape
+2026-05-18 18:23:07,227 INFO: ✅ 完成: test-music\CD2\15-失恋（草蜢）.ape
+2026-05-18 18:23:10,256 INFO: ✅ 完成: test-music\CD2\17-再见也是朋友（何婉盈-曾航生）.ape
+2026-05-18 18:23:10,770 INFO: ✅ 完成: test-music\CD2\16-痴心换情深（周慧敏）.ape
+2026-05-18 18:23:13,269 INFO: ✅ 完成: test-music\CD2\18-我和春天有个约会（刘雅丽）.ape
+2026-05-18 18:23:13,798 INFO: ✅ 完成: test-music\CD2\19-今夜你会不会来（黎明）.ape
+2026-05-18 18:23:16,295 INFO: ✅ 完成: test-music\CD2\20-我是不是该安静的走开（郭富城）.ape
+2026-05-18 18:23:16,306 INFO: 全部任务结束
