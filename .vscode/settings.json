@@ -1,3 +1,5 @@
 {
-    "editor.fontSize": 18
+  "chat.utilityModel": "customendpoint/Qwythos-9B-Claude-Mythos-5-1M-MTP-BF16",
+  "chat.utilitySmallModel": "customendpoint/Qwythos-9B-Claude-Mythos-5-1M-MTP-BF16",
+  "lmstudio-copilot.serverUrl": "http://127.0.0.1:8080/v1/models"
 }
